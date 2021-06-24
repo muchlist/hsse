@@ -2,14 +2,27 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:hsse/singletone/shared_pref.dart';
 import 'package:provider/provider.dart';
 
 import 'config/theme_color.dart';
-import 'provider/violation.dart';
+import 'providers/violation.dart';
 import 'router/routes.dart';
 import 'screen/home.dart';
 
-void main() {
+// API V
+// Shared Preference V
+// provider
+// Login Page
+// Firebase
+// ...
+
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+
+  // init SharedPrefs
+  await SharedPrefs().init();
+
   // add font licensi
   LicenseRegistry.addLicense(() async* {
     final license = await rootBundle.loadString('google_fonts/OFL.txt');

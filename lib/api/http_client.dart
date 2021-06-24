@@ -1,5 +1,6 @@
 import 'package:dio/dio.dart';
 import 'package:hsse/config/config.dart';
+import 'package:hsse/singletone/shared_pref.dart';
 
 import 'json_parsers/json_parsers.dart';
 
@@ -15,7 +16,7 @@ class RequestREST {
     receiveTimeout: 10000,
     sendTimeout: 10000,
     headers: <String, String>{
-      // "Authorization": "Bearer ${App.localStorage!.getString("token") ?? ""}",
+      "Authorization": "Bearer ${SharedPrefs().getToken() ?? ""}",
       "Accept": "*/*",
       "Content-Type": "application/json"
     },
@@ -32,7 +33,7 @@ class RequestREST {
         endpoint,
         options: Options(
           headers: {
-            // "Authorization": "Bearer ${App.getToken() ?? ""}",
+            "Authorization": "Bearer ${SharedPrefs().getToken() ?? ""}",
           },
         ),
       );
@@ -53,7 +54,7 @@ class RequestREST {
         data: data,
         options: Options(
           headers: {
-            // "Authorization": "Bearer ${App.getToken() ?? ""}",
+            "Authorization": "Bearer ${SharedPrefs().getToken() ?? ""}",
           },
         ),
       );
@@ -74,7 +75,7 @@ class RequestREST {
         data: data,
         options: Options(
           headers: {
-            // "Authorization": "Bearer ${App.getToken() ?? ""}",
+            "Authorization": "Bearer ${SharedPrefs().getToken() ?? ""}",
           },
         ),
       );
@@ -92,7 +93,7 @@ class RequestREST {
       endpoint,
       options: Options(
         headers: {
-          // "Authorization": "Bearer ${App.getToken() ?? ""}",
+          "Authorization": "Bearer ${SharedPrefs().getToken() ?? ""}",
         },
       ),
     );
@@ -109,7 +110,7 @@ class RequestREST {
         data: formData,
         options: Options(
           headers: {
-            // "Authorization": "Bearer ${App.getToken() ?? ""}",
+            "Authorization": "Bearer ${SharedPrefs().getToken() ?? ""}",
           },
         ),
       );
