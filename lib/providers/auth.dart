@@ -1,7 +1,7 @@
 import 'package:flutter/foundation.dart';
 import 'package:hsse/api/json_models/responses/login_resp.dart';
 import 'package:hsse/api/services/auth_service.dart';
-import 'package:hsse/singletone/shared_pref.dart';
+import 'package:hsse/singleton/shared_pref.dart';
 import 'package:hsse/utils/enum_state.dart';
 
 class AuthProvider extends ChangeNotifier {

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-import '../provider/violation.dart';
+import '../providers/violation.dart';
 import '../utils/utils.dart';
 
 class DetailScreen extends StatefulWidget {

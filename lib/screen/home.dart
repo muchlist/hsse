@@ -1,7 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
-import 'package:hsse/provider/violation.dart';
+import 'package:hsse/providers/violation.dart';
 import 'package:hsse/router/routes.dart';
 import 'package:hsse/screen/components/violation_tile.dart';
 import 'package:provider/provider.dart';

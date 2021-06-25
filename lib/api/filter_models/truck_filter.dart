@@ -6,10 +6,10 @@ class FilterTruck {
   final int? block; // -1 0 1
 
   FilterTruck({
-    required this.branch,
-    required this.identity,
-    required this.owner,
-    required this.active,
-    required this.block,
+    this.branch,
+    this.identity,
+    this.owner,
+    this.active,
+    this.block,
   });
 }

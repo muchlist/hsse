@@ -7,11 +7,11 @@ class FilterViol {
   final int? end;
 
   FilterViol({
-    required this.lambung,
-    required this.nopol,
-    required this.state,
-    required this.limit,
-    required this.start,
-    required this.end,
+    this.lambung,
+    this.nopol,
+    this.state,
+    this.limit,
+    this.start,
+    this.end,
   });
 }

@@ -1,6 +1,6 @@
 import 'package:dio/dio.dart';
 import 'package:hsse/config/config.dart';
-import 'package:hsse/singletone/shared_pref.dart';
+import 'package:hsse/singleton/shared_pref.dart';
 
 import 'json_parsers/json_parsers.dart';
 

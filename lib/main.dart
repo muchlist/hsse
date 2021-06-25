@@ -2,18 +2,21 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:hsse/singletone/shared_pref.dart';
+import 'package:hsse/api/services/auth_service.dart';
+import 'package:hsse/providers/auth.dart';
+import 'package:hsse/screen/landing/landing.dart';
+import 'package:hsse/singleton/shared_pref.dart';
 import 'package:provider/provider.dart';
 
-import 'config/theme_color.dart';
-import 'providers/violation.dart';
-import 'router/routes.dart';
-import 'screen/home.dart';
+import 'package:hsse/config/theme_color.dart';
+import 'package:hsse/providers/violation.dart';
+import 'package:hsse/router/routes.dart';
 
 // API V
 // Shared Preference V
-// provider
-// Login Page
+// provider login v
+// Login Page v
+// Provider
 // Firebase
 // ...
 
@@ -40,12 +43,17 @@ void main() async {
 
 class MyApp extends StatelessWidget {
   static const String _title = 'HSSE';
+  final AuthService _authService = AuthService();
+  // final ViolService _violService = ViolService();
+  // final RulesService _rulesService = RulesService();
+  // final TruckService _truckService = TruckService();
 
   @override
   Widget build(BuildContext context) {
     return MultiProvider(
       providers: [
         ChangeNotifierProvider(create: (context) => ViolationProvider()),
+        ChangeNotifierProvider(create: (context) => AuthProvider(_authService)),
       ],
       child: MaterialApp(
         title: _title,
@@ -60,7 +68,7 @@ class MyApp extends StatelessWidget {
             fontFamily: GoogleFonts.montserrat().fontFamily,
             textTheme: GoogleFonts.montserratTextTheme()),
         onGenerateRoute: RouteGenerator.generateRoute,
-        home: HomeScreen(),
+        home: LandingPage(),
         debugShowCheckedModeBanner: false,
       ),
     );
