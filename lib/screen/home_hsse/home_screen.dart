@@ -79,24 +79,6 @@ class _HomeHsseBodyState extends State<HomeHsseBody> {
     });
   }
 
-  Widget buildGridView(ViolProvider data) {
-    return StaggeredGridView.countBuilder(
-      shrinkWrap: true,
-      physics: NeverScrollableScrollPhysics(),
-      crossAxisCount: 2,
-      itemBuilder: (context, index) => GestureDetector(
-          onTap: () {
-            data
-              ..removeDetail()
-              ..setID(data.violList[index].id);
-            // Navigator.pushNamed(context, RouteGenerator.violDetail);
-          },
-          child: ViolationTile(data: data.violListReady[index])),
-      staggeredTileBuilder: (_) => StaggeredTile.fit(1),
-      itemCount: data.violListReady.length,
-    );
-  }
-
   @override
   void initState() {
     super.initState();
@@ -129,24 +111,64 @@ class _HomeHsseBodyState extends State<HomeHsseBody> {
   }
 
   Widget bulldHomeHsseBody(ViolProvider data) {
-    return SingleChildScrollView(
-      child: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 16.0),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            if (data.violListReady.length != 0)
-              const Text(
-                "Perlu persetujuan :",
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 16),
+      child: RefreshIndicator(
+        key: refreshKeyHomeHsseScreen,
+        onRefresh: _loadViol,
+        child: CustomScrollView(slivers: <Widget>[
+          SliverToBoxAdapter(
+              child: Padding(
+            padding: const EdgeInsets.symmetric(vertical: 8),
+            child: const Text("Perlu persetujuan :",
                 style: TextStyle(
                   fontSize: 18,
-                ),
-              ),
-            SizedBox(height: 10),
-            buildGridView(data),
-          ],
-        ),
+                )),
+          )),
+          buildGridViewReady(data),
+          SliverToBoxAdapter(
+              child: Padding(
+            padding: const EdgeInsets.symmetric(vertical: 8),
+            child: const Text("Riwayat :",
+                style: TextStyle(
+                  fontSize: 18,
+                )),
+          )),
+          buildGridViewApproved(data),
+        ]),
       ),
+    );
+  }
+
+  Widget buildGridViewReady(ViolProvider data) {
+    return SliverStaggeredGrid.countBuilder(
+      crossAxisCount: 2,
+      itemBuilder: (context, index) => GestureDetector(
+          onTap: () {
+            data
+              ..removeDetail()
+              ..setID(data.violListReady[index].id);
+            // Navigator.pushNamed(context, RouteGenerator.violDetail);
+          },
+          child: ViolationTile(data: data.violListReady[index])),
+      staggeredTileBuilder: (_) => StaggeredTile.fit(1),
+      itemCount: data.violListReady.length,
+    );
+  }
+
+  Widget buildGridViewApproved(ViolProvider data) {
+    return SliverStaggeredGrid.countBuilder(
+      crossAxisCount: 2,
+      itemBuilder: (context, index) => GestureDetector(
+          onTap: () {
+            data
+              ..removeDetail()
+              ..setID(data.violListApproved[index].id);
+            // Navigator.pushNamed(context, RouteGenerator.violDetail);
+          },
+          child: ViolationTile(data: data.violListApproved[index])),
+      staggeredTileBuilder: (_) => StaggeredTile.fit(1),
+      itemCount: data.violListApproved.length,
     );
   }
 }
