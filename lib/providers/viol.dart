@@ -32,6 +32,16 @@ class ViolProvider extends ChangeNotifier {
     return UnmodifiableListView(_violList);
   }
 
+  // viol list with ready state cache
+  List<ViolMinData> get violListReady {
+    return UnmodifiableListView(_violList.where((e) => e.state == 1));
+  }
+
+  // viol list with approved state cache
+  List<ViolMinData> get violListApproved {
+    return UnmodifiableListView(_violList.where((e) => e.state == 2));
+  }
+
   // *memasang filter pada pencarian viol
   FilterViol _filterViol = FilterViol(limit: 200);
   void setFilter(FilterViol filter) {
@@ -75,11 +85,11 @@ class ViolProvider extends ChangeNotifier {
   }
 
   String _violIDSaved = "";
-  void setViolID(String violID) {
+  void setID(String violID) {
     _violIDSaved = violID;
   }
 
-  String getViolId() => _violIDSaved;
+  String getID() => _violIDSaved;
 
   // viol detail cache
   ViolData _violDetail = ViolData("", 0, "", "", 0, "", "", 0, "", "", "", 0,

@@ -96,7 +96,8 @@ class _LoginFormState extends State<LoginForm> {
         authViewModel.login(username, password).then((value) {
           if (value) {
             Navigator.of(context).pushNamedAndRemoveUntil(
-                RouteGenerator.home, ModalRoute.withName(RouteGenerator.home));
+                RouteGenerator.homeHsse,
+                ModalRoute.withName(RouteGenerator.homeHsse));
           }
         }).onError((error, _) {
           if (error != null) {

@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:hsse/api/json_models/responses/viol_list_resp.dart';
+import 'package:hsse/config/url.dart';
+import 'package:hsse/screen/components/cached_image.dart';
 import '../../config/theme_color.dart';
-import '../../models/violation.dart';
 import '../../utils/utils.dart';
 
 class ViolationTile extends StatelessWidget {
-  final Violation data;
+  final ViolMinData data;
 
   const ViolationTile({Key? key, required this.data}) : super(key: key);
 
@@ -20,25 +22,24 @@ class ViolationTile extends StatelessWidget {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              if (data.imgUrl.isNotEmpty)
+              if (data.images.isNotEmpty)
                 Hero(
-                  tag: data.imgUrl,
-                  child: Image.asset(
-                    data.imgUrl,
-                    width: double.infinity,
-                    fit: BoxFit.cover,
-                  ),
-                ),
+                    tag: data.images[0],
+                    child: CachedImage(
+                      urlPath: "${ConstUrl.baseUrl}${data.images[0]}",
+                      width: double.infinity,
+                    )),
               const SizedBox(
                 height: 5,
               ),
-              Text(data.id, style: TextStyle(fontWeight: FontWeight.bold)),
+              Text(data.noIdentity,
+                  style: TextStyle(fontWeight: FontWeight.bold)),
               const SizedBox(
                 height: 5,
               ),
               Padding(
                   padding: EdgeInsets.only(left: 8),
-                  child: Text(data.detail,
+                  child: Text(data.detailViolation,
                       style: TextStyle(
                           fontWeight: FontWeight.w100, color: Colors.grey))),
               const SizedBox(
@@ -46,13 +47,19 @@ class ViolationTile extends StatelessWidget {
               ),
               Row(
                 children: [
-                  if (data.approved)
+                  if (data.approvedAt != 0)
                     const Icon(
                       Icons.check_circle_outline,
                       color: TColor.primary,
                     ),
                   const Spacer(),
-                  Text(data.date.toDisplay())
+                  Text(
+                    data.timeViolation.getCompleteDateString(),
+                    style: TextStyle(
+                        color: Colors.grey,
+                        fontSize: 12,
+                        fontStyle: FontStyle.italic),
+                  )
                 ],
               )
             ],

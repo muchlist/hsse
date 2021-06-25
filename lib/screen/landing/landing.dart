@@ -19,7 +19,7 @@ class _LandingPageState extends State<LandingPage> {
       });
     } else {
       await Future(() {
-        Navigator.pushReplacementNamed(context, RouteGenerator.home);
+        Navigator.pushReplacementNamed(context, RouteGenerator.homeHsse);
       });
     }
   }

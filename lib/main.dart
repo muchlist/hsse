@@ -4,19 +4,22 @@ import 'package:flutter/services.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:hsse/api/services/auth_service.dart';
 import 'package:hsse/providers/auth.dart';
+import 'package:hsse/providers/viol.dart';
 import 'package:hsse/screen/landing/landing.dart';
 import 'package:hsse/singleton/shared_pref.dart';
 import 'package:provider/provider.dart';
 
 import 'package:hsse/config/theme_color.dart';
-import 'package:hsse/providers/violation.dart';
 import 'package:hsse/router/routes.dart';
+
+import 'api/services/viol_service.dart';
 
 // API V
 // Shared Preference V
 // provider login v
 // Login Page v
-// Provider
+// Provider v
+// home screen
 // Firebase
 // ...
 
@@ -44,7 +47,7 @@ void main() async {
 class MyApp extends StatelessWidget {
   static const String _title = 'HSSE';
   final AuthService _authService = AuthService();
-  // final ViolService _violService = ViolService();
+  final ViolService _violService = ViolService();
   // final RulesService _rulesService = RulesService();
   // final TruckService _truckService = TruckService();
 
@@ -52,7 +55,7 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MultiProvider(
       providers: [
-        ChangeNotifierProvider(create: (context) => ViolationProvider()),
+        ChangeNotifierProvider(create: (context) => ViolProvider(_violService)),
         ChangeNotifierProvider(create: (context) => AuthProvider(_authService)),
       ],
       child: MaterialApp(

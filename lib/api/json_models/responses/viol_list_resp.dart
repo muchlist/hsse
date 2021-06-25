@@ -30,7 +30,6 @@ class ViolMinData {
       this.state,
       this.noIdentity,
       this.noPol,
-      this.mark,
       this.owner,
       this.typeViolation,
       this.detailViolation,
@@ -53,7 +52,6 @@ class ViolMinData {
   final String noIdentity;
   @JsonKey(name: "no_pol")
   final String noPol;
-  final String mark;
   final String owner;
   @JsonKey(name: "type_violation")
   final String typeViolation;

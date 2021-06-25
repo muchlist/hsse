@@ -24,6 +24,7 @@ dependencies:
   flutter:
     sdk: flutter
   another_flushbar: ^1.10.23
+  cached_network_image: ^3.0.0
   cupertino_icons: ^1.0.2
   dio: ^4.0.0
   flutter_image_compress: ^1.0.0
@@ -59,6 +60,8 @@ flutter:
     - images/example.jpg
     - images/example2.jpg
     - images/fake.jpg
+    - assets/lottie/150-android-fingerprint.json
+    - assets/lottie/629-empty-box.json
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware.
   # For details regarding adding assets from package dependencies, see
