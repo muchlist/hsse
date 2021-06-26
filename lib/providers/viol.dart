@@ -39,7 +39,11 @@ class ViolProvider extends ChangeNotifier {
 
   // viol list with approved state cache
   List<ViolMinData> get violListApproved {
-    return UnmodifiableListView(_violList.where((e) => e.state == 2));
+    var temp = _violList.where((e) => e.state == 2).toList();
+    if (temp.length < 3) {
+      return UnmodifiableListView(temp);
+    }
+    return UnmodifiableListView(temp.sublist(0, 3));
   }
 
   // *memasang filter pada pencarian viol

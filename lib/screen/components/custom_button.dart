@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:hsse/config/config.dart';
 
 class LoginButton extends StatelessWidget {
   final String title;
@@ -24,6 +25,45 @@ class LoginButton extends StatelessWidget {
             shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(5.0)),
             padding: const EdgeInsets.all(10.0)),
+      ),
+    );
+  }
+}
+
+class HomeLikeButton extends StatelessWidget {
+  final IconData iconData;
+  final String text;
+  final GestureTapCallback tapTap;
+  final Color color;
+
+  const HomeLikeButton(
+      {required this.iconData,
+      required this.text,
+      required this.tapTap,
+      this.color = TColor.primary});
+
+  @override
+  Widget build(BuildContext context) {
+    return GestureDetector(
+      onTap: tapTap,
+      child: Container(
+        padding: const EdgeInsets.all(12),
+        decoration: BoxDecoration(
+            color: color, borderRadius: BorderRadius.circular(24)),
+        child: Text.rich(TextSpan(children: [
+          WidgetSpan(
+              child: Icon(
+            iconData,
+            size: 21,
+            color: Colors.white,
+          )),
+          TextSpan(
+              text: " $text",
+              style: const TextStyle(
+                  color: Colors.white,
+                  fontSize: 16,
+                  fontWeight: FontWeight.w500)),
+        ])),
       ),
     );
   }

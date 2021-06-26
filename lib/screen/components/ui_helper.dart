@@ -59,6 +59,16 @@ double screenWidth(BuildContext context) => MediaQuery.of(context).size.width;
 bool screenIsPortrait(BuildContext context) =>
     MediaQuery.of(context).orientation == Orientation.portrait;
 
+bool screenIsMobile(BuildContext context) =>
+    MediaQuery.of(context).size.width < 850;
+
+bool screenIsTablet(BuildContext context) =>
+    MediaQuery.of(context).size.width < 1100 &&
+    MediaQuery.of(context).size.width >= 850;
+
+bool screenIsDesktop(BuildContext context) =>
+    MediaQuery.of(context).size.width > 1100;
+
 double screenHeightPercentage(BuildContext context, {double percentage = 1}) =>
     screenHeight(context) * percentage;
 double screenWidthPercentage(BuildContext context, {double percentage = 1}) =>

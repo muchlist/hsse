@@ -1,7 +1,10 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
+import 'package:hsse/config/theme_color.dart';
 import 'package:hsse/providers/viol.dart';
+import 'package:hsse/screen/components/circle_menu.dart';
+import 'package:hsse/screen/components/custom_button.dart';
 import 'package:hsse/screen/components/empty_box.dart';
 import 'package:hsse/screen/components/flushbar.dart';
 import 'package:hsse/screen/components/ui_helper.dart';
@@ -117,24 +120,22 @@ class _HomeHsseBodyState extends State<HomeHsseBody> {
         key: refreshKeyHomeHsseScreen,
         onRefresh: _loadViol,
         child: CustomScrollView(slivers: <Widget>[
-          SliverToBoxAdapter(
-              child: Padding(
-            padding: const EdgeInsets.symmetric(vertical: 8),
-            child: const Text("Perlu persetujuan :",
-                style: TextStyle(
-                  fontSize: 18,
-                )),
-          )),
+          buildSliverHeadText("Perlu persetujuan :"),
           buildGridViewReady(data),
+          buildSliverHeadText("Riwayat :"),
+          buildGridViewApproved(data),
           SliverToBoxAdapter(
               child: Padding(
-            padding: const EdgeInsets.symmetric(vertical: 8),
-            child: const Text("Riwayat :",
-                style: TextStyle(
-                  fontSize: 18,
-                )),
+            padding: const EdgeInsets.only(top: 8),
+            child: Center(
+              child: HomeLikeButton(
+                  iconData: CupertinoIcons.rocket,
+                  text: "Lihat semua",
+                  tapTap: () {}),
+            ),
           )),
-          buildGridViewApproved(data),
+          buildSliverHeadText("Menu Master :"),
+          buildMenuList(),
         ]),
       ),
     );
@@ -142,7 +143,7 @@ class _HomeHsseBodyState extends State<HomeHsseBody> {
 
   Widget buildGridViewReady(ViolProvider data) {
     return SliverStaggeredGrid.countBuilder(
-      crossAxisCount: 2,
+      crossAxisCount: (screenIsMobile(context)) ? 2 : 3,
       itemBuilder: (context, index) => GestureDetector(
           onTap: () {
             data
@@ -158,7 +159,7 @@ class _HomeHsseBodyState extends State<HomeHsseBody> {
 
   Widget buildGridViewApproved(ViolProvider data) {
     return SliverStaggeredGrid.countBuilder(
-      crossAxisCount: 2,
+      crossAxisCount: (screenIsMobile(context)) ? 2 : 3,
       itemBuilder: (context, index) => GestureDetector(
           onTap: () {
             data
@@ -170,5 +171,39 @@ class _HomeHsseBodyState extends State<HomeHsseBody> {
       staggeredTileBuilder: (_) => StaggeredTile.fit(1),
       itemCount: data.violListApproved.length,
     );
+  }
+
+  Widget buildSliverHeadText(String text) {
+    return SliverToBoxAdapter(
+        child: Padding(
+      padding: const EdgeInsets.symmetric(vertical: 8),
+      child: Text(text,
+          style: TextStyle(
+            fontSize: 18,
+          )),
+    ));
+  }
+
+  Widget buildMenuList() {
+    return SliverToBoxAdapter(
+        child: Container(
+            height: 120,
+            child: ListView(
+              scrollDirection: Axis.horizontal,
+              children: [
+                CircleMenu(
+                  color: TColor.primary,
+                  iconData: Icons.commute_sharp,
+                  tapTap: () {},
+                  text: 'Truck',
+                ),
+                CircleMenu(
+                  color: TColor.primary,
+                  iconData: Icons.book,
+                  tapTap: () {},
+                  text: 'Rules',
+                ),
+              ],
+            )));
   }
 }
