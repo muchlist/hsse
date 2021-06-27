@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'package:hsse/config/theme_color.dart';
 import 'package:hsse/providers/viol.dart';
+import 'package:hsse/router/routes.dart';
 import 'package:hsse/screen/components/circle_menu.dart';
 import 'package:hsse/screen/components/custom_button.dart';
 import 'package:hsse/screen/components/empty_box.dart';
@@ -131,7 +132,8 @@ class _HomeHsseBodyState extends State<HomeHsseBody> {
               child: HomeLikeButton(
                   iconData: CupertinoIcons.rocket,
                   text: "Lihat semua",
-                  tapTap: () {}),
+                  tapTap: () =>
+                      Navigator.pushNamed(context, RouteGenerator.history)),
             ),
           )),
           buildSliverHeadText("Menu Master :"),
