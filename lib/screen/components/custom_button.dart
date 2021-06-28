@@ -68,3 +68,40 @@ class HomeLikeButton extends StatelessWidget {
     );
   }
 }
+
+class ConfirmButton extends StatelessWidget {
+  final IconData iconData;
+  final String text;
+  final GestureTapCallback tapTap;
+  final Color color;
+
+  const ConfirmButton(
+      {required this.iconData,
+      required this.text,
+      required this.tapTap,
+      this.color = TColor.primary});
+
+  @override
+  Widget build(BuildContext context) {
+    return GestureDetector(
+      onTap: tapTap,
+      child: Container(
+        padding: const EdgeInsets.all(10),
+        decoration:
+            BoxDecoration(color: color, borderRadius: BorderRadius.circular(5)),
+        child: Text.rich(TextSpan(children: [
+          WidgetSpan(
+              child: Icon(
+            iconData,
+            size: 21,
+            color: Colors.white,
+          )),
+          TextSpan(
+              text: " $text",
+              style: const TextStyle(
+                  color: Colors.white, fontWeight: FontWeight.w500)),
+        ])),
+      ),
+    );
+  }
+}

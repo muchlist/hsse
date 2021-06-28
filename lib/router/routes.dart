@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:hsse/screen/home_hsse/home_screen.dart';
 import 'package:hsse/screen/login/login_screen.dart';
-import 'package:hsse/screen/violation_history/history_screen.dart';
+import 'package:hsse/screen/violation/history_screen.dart';
+import 'package:hsse/screen/violation/viol_detail.dart';
 
 class RouteGenerator {
   static const String homeHsse = '/home';
@@ -19,6 +20,8 @@ class RouteGenerator {
         return MaterialPageRoute(builder: (_) => HomeHsseScreen());
       case history:
         return MaterialPageRoute(builder: (_) => HistoryScreen());
+      case detail:
+        return MaterialPageRoute(builder: (_) => ViolDetailScreen());
       default:
         return MaterialPageRoute(builder: (_) => LoginScreen());
     }

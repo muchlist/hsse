@@ -6,6 +6,7 @@ import 'package:hsse/providers/viol.dart';
 import 'package:hsse/router/routes.dart';
 import 'package:hsse/screen/components/circle_menu.dart';
 import 'package:hsse/screen/components/custom_button.dart';
+import 'package:hsse/screen/components/disable_glow.dart';
 import 'package:hsse/screen/components/empty_box.dart';
 import 'package:hsse/screen/components/flushbar.dart';
 import 'package:hsse/screen/components/ui_helper.dart';
@@ -120,25 +121,27 @@ class _HomeHsseBodyState extends State<HomeHsseBody> {
       child: RefreshIndicator(
         key: refreshKeyHomeHsseScreen,
         onRefresh: _loadViol,
-        child: CustomScrollView(slivers: <Widget>[
-          buildSliverHeadText("Perlu persetujuan :"),
-          buildGridViewReady(data),
-          buildSliverHeadText("Riwayat :"),
-          buildGridViewApproved(data),
-          SliverToBoxAdapter(
-              child: Padding(
-            padding: const EdgeInsets.only(top: 8),
-            child: Center(
-              child: HomeLikeButton(
-                  iconData: CupertinoIcons.rocket,
-                  text: "Lihat semua",
-                  tapTap: () =>
-                      Navigator.pushNamed(context, RouteGenerator.history)),
-            ),
-          )),
-          buildSliverHeadText("Menu Master :"),
-          buildMenuList(),
-        ]),
+        child: DisableOverScrollGlow(
+          child: CustomScrollView(slivers: <Widget>[
+            buildSliverHeadText("Perlu persetujuan :"),
+            buildGridViewReady(data),
+            buildSliverHeadText("Riwayat :"),
+            buildGridViewApproved(data),
+            SliverToBoxAdapter(
+                child: Padding(
+              padding: const EdgeInsets.only(top: 8),
+              child: Center(
+                child: HomeLikeButton(
+                    iconData: CupertinoIcons.rocket,
+                    text: "Lihat semua",
+                    tapTap: () =>
+                        Navigator.pushNamed(context, RouteGenerator.history)),
+              ),
+            )),
+            buildSliverHeadText("Menu Master :"),
+            buildMenuList(),
+          ]),
+        ),
       ),
     );
   }
