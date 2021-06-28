@@ -38,6 +38,8 @@ dependencies:
   path_provider: ^2.0.1
   provider: ^5.0.0
   shared_preferences: ^2.0.3
+  url_launcher: ^6.0.7
+
 
 dev_dependencies:
   flutter_test:
@@ -62,6 +64,7 @@ flutter:
     - images/fake.jpg
     - assets/lottie/150-android-fingerprint.json
     - assets/lottie/629-empty-box.json
+    - assets/lottie/41993-no-wi-fi.json
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware.
   # For details regarding adding assets from package dependencies, see

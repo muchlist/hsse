@@ -14,15 +14,6 @@ import 'package:hsse/router/routes.dart';
 
 import 'api/services/viol_service.dart';
 
-// API V
-// Shared Preference V
-// provider login v
-// Login Page v
-// Provider v
-// home screen
-// Firebase
-// ...
-
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
 

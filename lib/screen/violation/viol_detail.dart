@@ -10,6 +10,7 @@ import 'package:hsse/screen/components/ui_helper.dart';
 import 'package:hsse/utils/enum_state.dart';
 import 'package:hsse/utils/utils.dart';
 import 'package:provider/provider.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 var refreshKeyDetailScreen = GlobalKey<RefreshIndicatorState>();
 
@@ -46,6 +47,36 @@ class _ViolDetailScreenBodyState extends State<ViolDetailScreenBody> {
         showToastError(context: context, message: error.toString());
       });
     });
+  }
+
+  Future<void> _approve() {
+    return Future.delayed(Duration.zero, () {
+      _violProvider.approve().onError((error, _) {
+        showToastError(context: context, message: error.toString());
+      });
+    });
+  }
+
+  Future<void> _reject() {
+    return Future.delayed(Duration.zero, () {
+      _violProvider.reject().onError((error, _) {
+        showToastError(context: context, message: error.toString());
+      });
+    });
+  }
+
+  Future<void> _launchInBrowser(String url) async {
+    if (await canLaunch(url)) {
+      await launch(
+        url,
+        forceSafariVC: false,
+        forceWebView: false,
+        // headers: <String, String>{'my_header_key': 'my_header_value'},
+      );
+    } else {
+      print("Tidak dapat mengakses pdf");
+      // showToastError(context: context, message: "Pdf tidak dapat dibuka");
+    }
   }
 
   @override
@@ -95,6 +126,18 @@ class _ViolDetailScreenBodyState extends State<ViolDetailScreenBody> {
                           const Text("LAMPIRAN"),
                           verticalSpaceSmall,
                           ListPhoto(detail: detail),
+                          verticalSpaceMedium,
+                          if (detail.state == 2)
+                            Center(
+                              child: HomeLikeButton(
+                                  iconData: Icons.download,
+                                  text: "Download PDF",
+                                  tapTap: () {
+                                    var url =
+                                        "${ConstUrl.baseUrl}pdf/${detail.id}.pdf";
+                                    _launchInBrowser(url);
+                                  }),
+                            ),
                           SizedBox(height: 150)
                         ],
                       ),
@@ -103,7 +146,16 @@ class _ViolDetailScreenBodyState extends State<ViolDetailScreenBody> {
                 ),
               ),
             ),
-            Positioned(bottom: 0, left: 0, right: 0, child: buildBottomScreen())
+            Positioned(
+              bottom: 0,
+              left: 0,
+              right: 0,
+              child: (detail.state == 2)
+                  ? buildBottomApproved(detail)
+                  : (detail.state == 1)
+                      ? buildBottomScreen()
+                      : buildBottomDraft(),
+            )
           ],
         );
       },
@@ -124,7 +176,7 @@ class _ViolDetailScreenBodyState extends State<ViolDetailScreenBody> {
               "🚚  Nomor Lambung",
               style: TextStyle(fontWeight: FontWeight.bold),
             ),
-            descText(data.noIdentity),
+            descText("${data.noIdentity} (${data.noPol})"),
             verticalSpaceSmall,
             const Text(
               "👤  Pemilik",
@@ -191,13 +243,81 @@ class _ViolDetailScreenBodyState extends State<ViolDetailScreenBody> {
           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           children: [
             ConfirmButton(
-                iconData: Icons.check, text: "Setuju ", tapTap: () {}),
+              iconData: Icons.check,
+              text: "Setuju ",
+              tapTap: _approve,
+            ),
             ConfirmButton(
               iconData: Icons.close,
               text: "Batal ",
-              tapTap: () {},
+              tapTap: _reject,
               color: Colors.redAccent,
             )
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget buildBottomApproved(ViolData data) {
+    return Container(
+      height: 50,
+      color: TColor.primary.withOpacity(0.9),
+      child: Padding(
+        padding: const EdgeInsets.all(8.0),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.start,
+          children: [
+            Icon(
+              Icons.double_arrow_sharp,
+              color: Colors.white,
+            ),
+            horizontalSpaceRegular,
+            Flexible(
+              child: Text(
+                "DISETUJUI OLEH ${data.approvedBy}",
+                style: TextStyle(color: Colors.white),
+                maxLines: 2,
+              ),
+            ),
+            horizontalSpaceTiny,
+            Icon(
+              Icons.double_arrow_sharp,
+              color: Colors.white,
+            ),
+            horizontalSpaceRegular,
+            Flexible(
+              child: Text(
+                "EMAIL DIKIRIM",
+                style: TextStyle(color: Colors.white),
+                maxLines: 2,
+              ),
+            )
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget buildBottomDraft() {
+    return Container(
+      height: 50,
+      color: Colors.deepOrange.shade400.withOpacity(0.9),
+      child: Padding(
+        padding: const EdgeInsets.all(8.0),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.start,
+          children: [
+            Icon(
+              Icons.drafts,
+              color: Colors.white,
+            ),
+            horizontalSpaceRegular,
+            Text(
+              "DRAFT",
+              style: TextStyle(color: Colors.white),
+              maxLines: 2,
+            ),
           ],
         ),
       ),
@@ -237,15 +357,15 @@ class ListPhoto extends StatelessWidget {
               return (detail.approvedAt > 0)
                   ? SizedBox.shrink()
                   : Padding(
-                      padding: const EdgeInsets.all(24.0),
-                      child: IconButton(
-                          onPressed: () {},
-                          icon: Icon(
-                            Icons.add_circle_outline,
-                            size: 40,
-                            color: Colors.grey,
-                          )),
-                    );
+                      padding: const EdgeInsets.symmetric(horizontal: 30),
+                      child: GestureDetector(
+                        onTap: () {},
+                        child: Icon(
+                          Icons.add_circle_outline,
+                          size: 40,
+                          color: Colors.grey,
+                        ),
+                      ));
             }
             return Padding(
               padding: const EdgeInsets.all(4.0),

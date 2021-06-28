@@ -105,7 +105,7 @@ class _HomeHsseBodyState extends State<HomeHsseBody> {
               child: (data.violList.length != 0)
                   ? bulldHomeHsseBody(data)
                   : (data.state == ViewState.idle)
-                      ? EmptyBox(loadTap: _loadViol)
+                      ? NoConnectionBox(loadTap: _loadViol)
                       : Center()),
           (data.state == ViewState.busy)
               ? Center(child: CircularProgressIndicator())
@@ -154,7 +154,7 @@ class _HomeHsseBodyState extends State<HomeHsseBody> {
             data
               ..removeDetail()
               ..setID(data.violListReady[index].id);
-            // Navigator.pushNamed(context, RouteGenerator.violDetail);
+            Navigator.pushNamed(context, RouteGenerator.detail);
           },
           child: ViolationTile(data: data.violListReady[index])),
       staggeredTileBuilder: (_) => StaggeredTile.fit(1),
@@ -170,7 +170,7 @@ class _HomeHsseBodyState extends State<HomeHsseBody> {
             data
               ..removeDetail()
               ..setID(data.violListApproved[index].id);
-            // Navigator.pushNamed(context, RouteGenerator.violDetail);
+            Navigator.pushNamed(context, RouteGenerator.detail);
           },
           child: ViolationTile(data: data.violListApproved[index])),
       staggeredTileBuilder: (_) => StaggeredTile.fit(1),

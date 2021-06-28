@@ -131,6 +131,52 @@ class ViolProvider extends ChangeNotifier {
     }
   }
 
+  // Approve
+  Future<void> approve() async {
+    setDetailState(ViewState.busy);
+
+    var error = "";
+    try {
+      final response = await _violService.approveViol(_violIDSaved);
+      if (response.error != null) {
+        error = response.error!.message;
+      } else {
+        final violData = response.data!;
+        _violDetail = violData;
+      }
+    } catch (e) {
+      error = e.toString();
+    }
+
+    setDetailState(ViewState.idle);
+    if (error.isNotEmpty) {
+      return Future.error(error);
+    }
+  }
+
+  // Reject
+  Future<void> reject() async {
+    setDetailState(ViewState.busy);
+
+    var error = "";
+    try {
+      final response = await _violService.sendDraftViol(_violIDSaved);
+      if (response.error != null) {
+        error = response.error!.message;
+      } else {
+        final violData = response.data!;
+        _violDetail = violData;
+      }
+    } catch (e) {
+      error = e.toString();
+    }
+
+    setDetailState(ViewState.idle);
+    if (error.isNotEmpty) {
+      return Future.error(error);
+    }
+  }
+
   // return future true jika add viol berhasil
   // memanggil findViol sehingga tidak perlu notifyListener
   Future<bool> addViol(ViolRequest payload) async {
