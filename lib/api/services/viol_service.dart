@@ -81,8 +81,8 @@ class ViolService {
   }
 
   // params : imageName with extension
-  Future<ViolDetailResponse> deleteImageViol(String imageName) {
-    return RequestREST(endpoint: "/violation-delete-image/$imageName")
+  Future<ViolDetailResponse> deleteImageViol(String id, String imageName) {
+    return RequestREST(endpoint: "/violation-delete-image/$id/$imageName")
         .executeGet<ViolDetailResponse>(ViolParser());
   }
 }

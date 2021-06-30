@@ -6,6 +6,7 @@ import 'package:hsse/router/routes.dart';
 import 'package:hsse/screen/components/flushbar.dart';
 import 'package:hsse/screen/components/ui_helper.dart';
 import 'package:hsse/screen/components/violation_tile.dart';
+import 'package:hsse/search/viol_search.dart';
 import 'package:provider/provider.dart';
 
 var refreshKeyHistoryScreen = GlobalKey<RefreshIndicatorState>();
@@ -26,17 +27,16 @@ class HistoryScreen extends StatelessWidget {
               size: 28,
             ),
             onPressed: () async {
-              // final searchResult = await showSearch(
-              //   context: context,
-              //   delegate: ComputerSearchDelegate(),
-              // );
-              // if (searchResult != null) {
-              //   _computerProvider
-              //     ..removeDetail()
-              //     ..setComputerID(searchResult);
-              //   await Navigator.pushNamed(
-              //       context, RouteGenerator.computerDetail);
-              // }
+              final searchResult = await showSearch(
+                context: context,
+                delegate: ViolSearchDelegate(),
+              );
+              if (searchResult != null) {
+                context.read<ViolProvider>()
+                  ..removeDetail()
+                  ..setID(searchResult);
+                await Navigator.pushNamed(context, RouteGenerator.detail);
+              }
             },
           ),
           IconButton(

@@ -32,6 +32,7 @@ class ViolData {
       this.approvedById,
       this.branch,
       this.state,
+      this.nViol,
       this.noIdentity,
       this.noPol,
       this.mark,
@@ -63,6 +64,8 @@ class ViolData {
   final String approvedById;
   final String branch;
   final int state;
+  @JsonKey(name: "n_viol", defaultValue: 0)
+  final int nViol;
   @JsonKey(name: "no_identity")
   final String noIdentity;
   @JsonKey(name: "no_pol")

@@ -12,8 +12,8 @@ import 'package:hsse/utils/enum_state.dart';
 import 'package:hsse/utils/image_compress.dart';
 
 class ViolProvider extends ChangeNotifier {
-  final ViolService _violService;
   ViolProvider(this._violService);
+  final ViolService _violService;
 
   // =======================================================
   // List Viol
@@ -27,7 +27,7 @@ class ViolProvider extends ChangeNotifier {
   }
 
   // viol list cache
-  List<ViolMinData> _violList = [];
+  List<ViolMinData> _violList = <ViolMinData>[];
   List<ViolMinData> get violList {
     return UnmodifiableListView(_violList);
   }
@@ -77,6 +77,35 @@ class ViolProvider extends ChangeNotifier {
     }
   }
 
+  // violsearch list cache
+  List<ViolMinData> _violListSearch = <ViolMinData>[];
+  List<ViolMinData> get violListSearch {
+    return UnmodifiableListView(_violListSearch);
+  }
+
+  Future<void> searchViol(String noIdentity) async {
+    var filter = FilterViol(lambung: noIdentity);
+
+    var error = "";
+    try {
+      final response = await _violService.findViol(filter);
+      if (response.error != null) {
+        error = response.error!.message;
+        _violListSearch = [];
+      } else {
+        _violListSearch = response.data;
+      }
+    } catch (e) {
+      error = e.toString();
+    }
+
+    setState(ViewState.idle);
+
+    if (error.isNotEmpty) {
+      return Future.error(error);
+    }
+  }
+
 // ========================================================
   // detail viol
 
@@ -96,15 +125,15 @@ class ViolProvider extends ChangeNotifier {
   String getID() => _violIDSaved;
 
   // viol detail cache
-  ViolData _violDetail = ViolData("", 0, "", "", 0, "", "", 0, "", "", "", 0,
+  ViolData _violDetail = ViolData("", 0, "", "", 0, "", "", 0, "", "", "", 0, 0,
       "", "", "", "", "", "", 0, "", []);
   ViolData get violDetail {
     return _violDetail;
   }
 
   void removeDetail() {
-    _violDetail = ViolData("", 0, "", "", 0, "", "", 0, "", "", "", 0, "", "",
-        "", "", "", "", 0, "", []);
+    _violDetail = ViolData("", 0, "", "", 0, "", "", 0, "", "", "", 0, 0, "",
+        "", "", "", "", "", 0, "", []);
   }
 
   // get detail viol
@@ -149,9 +178,11 @@ class ViolProvider extends ChangeNotifier {
     }
 
     setDetailState(ViewState.idle);
+
     if (error.isNotEmpty) {
       return Future.error(error);
     }
+    await findViol(loading: false);
   }
 
   // Reject
@@ -175,6 +206,7 @@ class ViolProvider extends ChangeNotifier {
     if (error.isNotEmpty) {
       return Future.error(error);
     }
+    await findViol(loading: false);
   }
 
   // return future true jika add viol berhasil
@@ -245,13 +277,21 @@ class ViolProvider extends ChangeNotifier {
 
   // * update image
   // return future true jika update image berhasil
-  Future<bool> uploadImage(String id, File file) async {
+  Future<bool> uploadImage(File file) async {
+    setDetailState(ViewState.busy);
+
     var error = "";
 
-    final fileCompressed = await compressFile(file);
+    late File fileCompressed;
+    try {
+      fileCompressed = await compressFile(file);
+    } catch (e) {
+      error = e.toString();
+    }
 
     try {
-      final response = await _violService.uploadImage(id, fileCompressed);
+      final response =
+          await _violService.uploadImage(_violIDSaved, fileCompressed);
       if (response.error != null) {
         error = response.error!.message;
       } else {
@@ -261,12 +301,41 @@ class ViolProvider extends ChangeNotifier {
       error = e.toString();
     }
 
-    notifyListeners();
-
+    setDetailState(ViewState.idle);
     if (error.isNotEmpty) {
       return Future.error(error);
     }
+    await findViol(loading: false);
     return true;
+  }
+
+  // * Menghapus foto /id/example.jpg
+  Future<void> deleteImage(String imageName) async {
+    // imageName from list server bentuknya seperti ini
+    // image/violation/namaImage.jpg sedangkan hanya diperlukan namaImage.jpg nya saja sebagai input
+    // maka modifikasi dulu stringnya
+    var imageNameMod = imageName.replaceFirst("image/violation/", "");
+
+    setDetailState(ViewState.busy);
+    var error = "";
+    try {
+      final response =
+          await _violService.deleteImageViol(_violIDSaved, imageNameMod);
+      if (response.error != null) {
+        error = response.error!.message;
+      } else {
+        final violData = response.data!;
+        _violDetail = violData;
+      }
+    } catch (e) {
+      error = e.toString();
+    }
+
+    setDetailState(ViewState.idle);
+    if (error.isNotEmpty) {
+      return Future.error(error);
+    }
+    await findViol(loading: false);
   }
 
   // remove viol

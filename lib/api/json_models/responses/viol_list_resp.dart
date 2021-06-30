@@ -28,6 +28,7 @@ class ViolMinData {
       this.approvedBy,
       this.branch,
       this.state,
+      this.nViol,
       this.noIdentity,
       this.noPol,
       this.owner,
@@ -48,6 +49,8 @@ class ViolMinData {
   final String approvedBy;
   final String branch;
   final int state;
+  @JsonKey(name: "n_viol", defaultValue: 0)
+  final int nViol;
   @JsonKey(name: "no_identity")
   final String noIdentity;
   @JsonKey(name: "no_pol")

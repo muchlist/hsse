@@ -123,8 +123,9 @@ class _HomeHsseBodyState extends State<HomeHsseBody> {
         onRefresh: _loadViol,
         child: DisableOverScrollGlow(
           child: CustomScrollView(slivers: <Widget>[
-            buildSliverHeadText("Perlu persetujuan :"),
-            buildGridViewReady(data),
+            if (data.violListReady.length != 0)
+              buildSliverHeadText("Perlu persetujuan :"),
+            if (data.violListReady.length != 0) buildGridViewReady(data),
             buildSliverHeadText("Riwayat :"),
             buildGridViewApproved(data),
             SliverToBoxAdapter(
