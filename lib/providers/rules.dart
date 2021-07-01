@@ -84,7 +84,7 @@ class RulesProvider extends ChangeNotifier {
 
   // get detail rules
   // * Mendapatkan rules
-  Future<void> getDetail() async {
+  Future<RulesData> getDetail() async {
     setDetailState(ViewState.busy);
 
     var error = "";
@@ -93,8 +93,7 @@ class RulesProvider extends ChangeNotifier {
       if (response.error != null) {
         error = response.error!.message;
       } else {
-        final rulesData = response.data!;
-        _rulesDetail = rulesData;
+        _rulesDetail = response.data!;
       }
     } catch (e) {
       error = e.toString();
@@ -104,6 +103,8 @@ class RulesProvider extends ChangeNotifier {
     if (error.isNotEmpty) {
       return Future.error(error);
     }
+
+    return _rulesDetail;
   }
 
   // return future true jika add rules berhasil
@@ -128,6 +129,8 @@ class RulesProvider extends ChangeNotifier {
     await findRules(loading: false);
     return true;
   }
+
+  //
 
   // return future RulesDetail jika edit rules berhasil
   Future<bool> editRules(RulesEditRequest payload) async {

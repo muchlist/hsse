@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:hsse/config/config.dart';
 import 'package:hsse/providers/rules.dart';
 import 'package:hsse/router/routes.dart';
 import 'package:hsse/screen/components/flushbar.dart';
@@ -64,19 +65,31 @@ class _RulesBodyState extends State<RulesBody> {
           child: ListView.builder(
             itemBuilder: (context, index) {
               final dayBlock = data.rulesList[index].blockTime.toDurationDay();
-              return Card(
-                child: Padding(
-                  padding: const EdgeInsets.all(4.0),
-                  child: ListTile(
-                    title:
-                        Text("Pelanggaran ke ${data.rulesList[index].score}"),
-                    subtitle: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: <Widget>[
-                        Text(data.rulesList[index].description),
-                        if (dayBlock != "0 hari")
-                          Text("Blokir selama $dayBlock"),
-                      ],
+              return GestureDetector(
+                onTap: () {
+                  data
+                    ..removeDetail()
+                    ..setRulesID(data.rulesList[index].id);
+                  Navigator.pushNamed(context, RouteGenerator.editRules);
+                },
+                child: Card(
+                  child: Padding(
+                    padding: const EdgeInsets.all(4.0),
+                    child: ListTile(
+                      leading: CircleAvatar(
+                        backgroundColor: TColor.secondaryBackground,
+                        child: Text(data.rulesList[index].score.toString()),
+                      ),
+                      title:
+                          Text("Pelanggaran ke ${data.rulesList[index].score}"),
+                      subtitle: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: <Widget>[
+                          Text(data.rulesList[index].description),
+                          if (dayBlock != "0 hari")
+                            Text("Blokir selama $dayBlock"),
+                        ],
+                      ),
                     ),
                   ),
                 ),
