@@ -31,7 +31,7 @@ class HistoryScreen extends StatelessWidget {
                 context: context,
                 delegate: ViolSearchDelegate(),
               );
-              if (searchResult != null) {
+              if (searchResult != null && searchResult != "") {
                 context.read<ViolProvider>()
                   ..removeDetail()
                   ..setID(searchResult);

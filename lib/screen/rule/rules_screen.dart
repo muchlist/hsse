@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:hsse/providers/rules.dart';
+import 'package:hsse/router/routes.dart';
 import 'package:hsse/screen/components/flushbar.dart';
 import 'package:hsse/utils/utils.dart';
 import 'package:provider/provider.dart';
@@ -20,7 +21,7 @@ class RulesScreen extends StatelessWidget {
       floatingActionButton: FloatingActionButton.extended(
           icon: Icon(Icons.add),
           onPressed: () {
-            // Navigator.pushNamed(context, RouteGenerator.computerAdd);
+            Navigator.pushNamed(context, RouteGenerator.addRules);
           },
           label: Text("Tambah")),
       body: RulesBody(),

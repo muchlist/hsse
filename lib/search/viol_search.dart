@@ -82,6 +82,19 @@ class ViolSearchDelegate extends SearchDelegate<String> {
 
   @override
   Widget buildSuggestions(BuildContext context) {
+    if (query.length < 3) {
+      return Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: const <Widget>[
+          Center(
+            child: Text(
+              'Pencarian harus lebih dari 3 karakter.',
+            ),
+          )
+        ],
+      );
+    }
+
     Future.delayed(Duration.zero, () {
       context.read<ViolProvider>().searchViol(query).onError((error, _) {
         if (error != null) {
