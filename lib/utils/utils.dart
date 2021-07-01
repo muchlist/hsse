@@ -24,6 +24,11 @@ extension UnixTimeStamp on int {
     var date = DateTime.fromMillisecondsSinceEpoch(this * 1000);
     return DateFormat("d MMM y HH:mm").format(date.toLocal());
   }
+
+  String toDurationDay() {
+    var day = this ~/ 86400; // day to second
+    return "${day} hari";
+  }
 }
 
 extension DateMYString on DateTime {

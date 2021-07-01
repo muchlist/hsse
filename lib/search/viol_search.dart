@@ -5,7 +5,6 @@ import 'package:hsse/router/routes.dart';
 import 'package:hsse/screen/components/flushbar.dart';
 import 'package:hsse/screen/components/ui_helper.dart';
 import 'package:hsse/screen/components/violation_tile.dart';
-import 'package:hsse/utils/enum_state.dart';
 import 'package:provider/provider.dart';
 
 class ViolSearchDelegate extends SearchDelegate<String> {

@@ -203,11 +203,15 @@ class _HomeHsseBodyState extends State<HomeHsseBody> {
                   tapTap: () {},
                   text: 'Truck',
                 ),
-                CircleMenu(
-                  color: TColor.primary,
-                  iconData: Icons.book,
-                  tapTap: () {},
-                  text: 'Rules',
+                GestureDetector(
+                  onTap: () =>
+                      Navigator.pushNamed(context, RouteGenerator.rules),
+                  child: CircleMenu(
+                    color: TColor.primary,
+                    iconData: Icons.book,
+                    tapTap: () {},
+                    text: 'Rules',
+                  ),
                 ),
               ],
             )));
