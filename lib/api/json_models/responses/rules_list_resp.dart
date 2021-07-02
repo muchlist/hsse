@@ -6,14 +6,12 @@ part 'rules_list_resp.g.dart';
 
 @JsonSerializable(explicitToJson: true)
 class RulesListResponse {
-  final ErrorResp? error;
-  @JsonKey(defaultValue: [])
-  final List<RulesMinData> data;
-
   RulesListResponse(this.error, this.data);
-
   factory RulesListResponse.fromJson(Map<String, dynamic> json) =>
       _$RulesListResponseFromJson(json);
+  final ErrorResp? error;
+  @JsonKey(defaultValue: <RulesMinData>[])
+  final List<RulesMinData> data;
 
   Map<String, dynamic> toJson() => _$RulesListResponseToJson(this);
 }

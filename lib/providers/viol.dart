@@ -36,7 +36,7 @@ class ViolProvider extends ChangeNotifier {
   // viol list with ready state cache
   List<ViolMinData> get violListReady {
     return UnmodifiableListView<ViolMinData>(
-        _violList.where((e) => e.state == 1));
+        _violList.where((ViolMinData e) => e.state == 1));
   }
 
   // viol list with approved state cache
@@ -84,7 +84,7 @@ class ViolProvider extends ChangeNotifier {
   }
 
   Future<void> searchViol(String noIdentity) async {
-    FilterViol filter = FilterViol(lambung: noIdentity.toUpperCase());
+    final FilterViol filter = FilterViol(lambung: noIdentity.toUpperCase());
 
     String error = "";
     try {
@@ -349,7 +349,8 @@ class ViolProvider extends ChangeNotifier {
     setDetailState(ViewState.busy);
     String error = "";
     try {
-      final response = await _violService.deleteImageViol(violID, imageNameMod);
+      final ViolDetailResponse response =
+          await _violService.deleteImageViol(violID, imageNameMod);
       if (response.error != null) {
         error = response.error!.message;
       } else {

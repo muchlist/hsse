@@ -247,7 +247,7 @@ class _EditViolBodyState extends State<EditViolBody> {
                       value: (_selectedLocation != null)
                           ? _selectedLocation
                           : null,
-                      items: locationViolations.map((loc) {
+                      items: locationViolations.map((String loc) {
                         return DropdownMenuItem<String>(
                           value: loc,
                           child: Text(loc),

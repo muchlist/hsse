@@ -282,7 +282,7 @@ class _AddViolBodyState extends State<AddViolBody> {
 
                 verticalSpaceMedium,
 
-                Consumer<ViolProvider>(builder: (_, data, __) {
+                Consumer<ViolProvider>(builder: (_, ViolProvider data, __) {
                   return (data.state == ViewState.busy)
                       ? const Center(child: CircularProgressIndicator())
                       : Center(

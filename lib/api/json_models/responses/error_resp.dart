@@ -12,6 +12,6 @@ class ErrorResp {
   final int status;
   final String message;
   final String error;
-  @JsonKey(defaultValue: [])
+  @JsonKey(defaultValue: <String>[])
   final List<String> causes;
 }

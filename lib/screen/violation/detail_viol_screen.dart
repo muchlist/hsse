@@ -352,7 +352,7 @@ class _ViolDetailScreenBodyState extends State<ViolDetailScreenBody> {
         padding: const EdgeInsets.all(8.0),
         child: Row(
           crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
+          children: <Widget>[
             const Icon(
               Icons.double_arrow_sharp,
               color: Colors.white,
@@ -394,7 +394,7 @@ class _ViolDetailScreenBodyState extends State<ViolDetailScreenBody> {
         padding: const EdgeInsets.all(8.0),
         child: Row(
           crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
+          children: <Widget>[
             const Icon(
               Icons.drafts,
               color: Colors.white,

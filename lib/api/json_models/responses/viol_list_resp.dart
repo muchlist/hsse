@@ -13,7 +13,7 @@ class ViolListResponse {
 
   Map<String, dynamic> toJson() => _$ViolListResponseToJson(this);
   final ErrorResp? error;
-  @JsonKey(defaultValue: [])
+  @JsonKey(defaultValue: <ViolMinData>[])
   final List<ViolMinData> data;
 }
 

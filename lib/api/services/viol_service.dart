@@ -16,22 +16,22 @@ class ViolService {
 
   Future<MessageResponse> createViol(ViolRequest payload) {
     return RequestREST(endpoint: "/violation", data: payload.toJson())
-        .executePost<MessageResponse>(MessageParser());
+        .executePost<MessageResponse>(const MessageParser());
   }
 
   Future<ViolDetailResponse> editViol(String id, ViolEditRequest payload) {
     return RequestREST(endpoint: "/violation/$id", data: payload.toJson())
-        .executePut<ViolDetailResponse>(ViolParser());
+        .executePut<ViolDetailResponse>(const ViolParser());
   }
 
   Future<ViolDetailResponse> getViol(String id) {
     return RequestREST(endpoint: "/violation/$id")
-        .executeGet<ViolDetailResponse>(ViolParser());
+        .executeGet<ViolDetailResponse>(const ViolParser());
   }
 
   Future<MessageResponse> deleteViol(String id) {
     return RequestREST(endpoint: "/violation/$id")
-        .executeDelete<MessageResponse>(MessageParser());
+        .executeDelete<MessageResponse>(const MessageParser());
   }
 
   Future<ViolListResponse> findViol(FilterViol f) {
