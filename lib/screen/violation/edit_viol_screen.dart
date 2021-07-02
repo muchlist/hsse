@@ -2,6 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_datetime_picker/flutter_datetime_picker.dart';
 import 'package:hsse/api/json_models/requests/viol_edit_req.dart';
+import 'package:hsse/api/json_models/responses/viol_resp.dart';
 import 'package:hsse/config/options.dart';
 import 'package:hsse/screen/components/custom_button.dart';
 import 'package:hsse/screen/components/flushbar.dart';
@@ -32,14 +33,14 @@ class EditViolBody extends StatefulWidget {
 }
 
 class _EditViolBodyState extends State<EditViolBody> {
-  final _key = GlobalKey<FormState>();
+  final GlobalKey<FormState> _key = GlobalKey<FormState>();
   late ViolProvider violProvider;
 
-  var _selectedNoIdentity = "";
+  String _selectedNoIdentity = "";
   String? _selectedLocation;
   String? _selectedType;
 
-  final detailController = TextEditingController();
+  final TextEditingController detailController = TextEditingController();
 
   DateTime? _dateSelected;
 
@@ -53,9 +54,8 @@ class _EditViolBodyState extends State<EditViolBody> {
   void _showDateTimePicker() {
     DatePicker.showDateTimePicker(context,
         locale: LocaleType.id,
-        showTitleActions: true,
         minTime: DateTime(DateTime.now().year - 10),
-        maxTime: DateTime(DateTime.now().year + 1), onConfirm: (date) {
+        maxTime: DateTime(DateTime.now().year + 1), onConfirm: (DateTime date) {
       setState(() {
         _dateSelected = date;
       });
@@ -65,7 +65,7 @@ class _EditViolBodyState extends State<EditViolBody> {
   void _editViol(int timestamp) {
     if (_key.currentState?.validate() ?? false) {
       // validasi tambahan
-      var errorMessage = "";
+      String errorMessage = "";
       if (_selectedNoIdentity.isEmpty) {
         errorMessage = errorMessage + "Nomor lambung tidak boleh kosong. ";
       }
@@ -76,12 +76,12 @@ class _EditViolBodyState extends State<EditViolBody> {
         errorMessage = errorMessage + "Tipe tidak boleh kosong. ";
       }
       if (errorMessage.isNotEmpty) {
-        showToastWarning(context: context, message: errorMessage, onTop: true);
+        showToastWarning(context: context, message: errorMessage);
         return;
       }
 
       // Payload
-      final payload = ViolEditRequest(
+      final ViolEditRequest payload = ViolEditRequest(
           noIdentity: _selectedNoIdentity,
           typeViolation: _selectedType!,
           detailViolation: detailController.text,
@@ -90,16 +90,16 @@ class _EditViolBodyState extends State<EditViolBody> {
           filterTimestamp: timestamp);
 
       // Call Provider
-      Future.delayed(
+      Future<void>.delayed(
           Duration.zero,
-          () => context.read<ViolProvider>().editViol(payload).then((value) {
+          () =>
+              context.read<ViolProvider>().editViol(payload).then((bool value) {
                 if (value) {
                   Navigator.of(context).pop();
                 }
-              }).onError((error, _) {
+              }).onError((Object? error, _) {
                 if (error != null) {
-                  showToastError(
-                      context: context, message: error.toString(), onTop: true);
+                  showToastError(context: context, message: error.toString());
                 }
               }));
     }
@@ -108,7 +108,7 @@ class _EditViolBodyState extends State<EditViolBody> {
   @override
   void initState() {
     violProvider = context.read<ViolProvider>();
-    final detail = violProvider.violDetail;
+    final ViolData detail = violProvider.violDetail;
 
     setState(() {
       _selectedNoIdentity = detail.noIdentity;
@@ -137,7 +137,7 @@ class _EditViolBodyState extends State<EditViolBody> {
             key: _key,
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
+              children: <Widget>[
                 // * Skor pelanggaran text ------------------------
                 const Text(
                   "Nomor lambung",
@@ -145,7 +145,7 @@ class _EditViolBodyState extends State<EditViolBody> {
                 ),
                 GestureDetector(
                   onTap: () async {
-                    final searchResult = await showSearch<String?>(
+                    final String? searchResult = await showSearch<String?>(
                       context: context,
                       delegate: TruckSearchDelegate(),
                     );
@@ -157,17 +157,17 @@ class _EditViolBodyState extends State<EditViolBody> {
                   },
                   child: Container(
                     height: 50,
-                    padding: EdgeInsets.symmetric(horizontal: 8),
+                    padding: const EdgeInsets.symmetric(horizontal: 8),
                     width: double.infinity,
                     alignment: Alignment.centerLeft,
-                    decoration: BoxDecoration(color: Colors.white),
+                    decoration: const BoxDecoration(color: Colors.white),
                     child: Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
+                        children: <Widget>[
                           Text(
                             _selectedNoIdentity,
                           ),
-                          Icon(CupertinoIcons.search),
+                          const Icon(CupertinoIcons.search),
                         ]),
                   ),
                 ),
@@ -180,23 +180,23 @@ class _EditViolBodyState extends State<EditViolBody> {
                 ),
 
                 Container(
-                  padding: EdgeInsets.symmetric(horizontal: 8),
+                  padding: const EdgeInsets.symmetric(horizontal: 8),
                   height: 50,
                   width: double.infinity,
                   alignment: Alignment.centerLeft,
-                  decoration: BoxDecoration(color: Colors.white),
+                  decoration: const BoxDecoration(color: Colors.white),
                   child: DropdownButtonHideUnderline(
                     child: DropdownButton<String>(
                       isExpanded: true,
-                      hint: Text("Tipe"),
+                      hint: const Text("Tipe"),
                       value: (_selectedType != null) ? _selectedType : null,
-                      items: typeViolations.map((loc) {
+                      items: typeViolations.map((String loc) {
                         return DropdownMenuItem<String>(
                           value: loc,
                           child: Text(loc),
                         );
                       }).toList(),
-                      onChanged: (value) {
+                      onChanged: (String? value) {
                         setState(() {
                           _selectedType = value;
                           FocusScope.of(context).requestFocus(FocusNode());
@@ -218,7 +218,7 @@ class _EditViolBodyState extends State<EditViolBody> {
                   controller: detailController,
                   minLines: 2,
                   maxLines: 4,
-                  validator: (text) {
+                  validator: (String? text) {
                     if (text == null || text.isEmpty) {
                       return "Detail tidak boleh kosong";
                     }
@@ -235,15 +235,15 @@ class _EditViolBodyState extends State<EditViolBody> {
                 ),
 
                 Container(
-                  padding: EdgeInsets.symmetric(horizontal: 8),
+                  padding: const EdgeInsets.symmetric(horizontal: 8),
                   height: 50,
                   width: double.infinity,
                   alignment: Alignment.centerLeft,
-                  decoration: BoxDecoration(color: Colors.white),
+                  decoration: const BoxDecoration(color: Colors.white),
                   child: DropdownButtonHideUnderline(
                     child: DropdownButton<String>(
                       isExpanded: true,
-                      hint: Text("Lokasi"),
+                      hint: const Text("Lokasi"),
                       value: (_selectedLocation != null)
                           ? _selectedLocation
                           : null,
@@ -253,7 +253,7 @@ class _EditViolBodyState extends State<EditViolBody> {
                           child: Text(loc),
                         );
                       }).toList(),
-                      onChanged: (value) {
+                      onChanged: (String? value) {
                         setState(() {
                           _selectedLocation = value;
                           FocusScope.of(context).requestFocus(FocusNode());
@@ -275,26 +275,26 @@ class _EditViolBodyState extends State<EditViolBody> {
                   onTap: _showDateTimePicker,
                   child: Container(
                     height: 50,
-                    padding: EdgeInsets.symmetric(horizontal: 8),
+                    padding: const EdgeInsets.symmetric(horizontal: 8),
                     width: double.infinity,
                     alignment: Alignment.centerLeft,
-                    decoration: BoxDecoration(color: Colors.white),
+                    decoration: const BoxDecoration(color: Colors.white),
                     child: Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
+                        children: <Widget>[
                           Text(
                             getDateString(),
                           ),
-                          Icon(CupertinoIcons.calendar),
+                          const Icon(CupertinoIcons.calendar),
                         ]),
                   ),
                 ),
 
                 verticalSpaceMedium,
 
-                Consumer<ViolProvider>(builder: (_, data, __) {
+                Consumer<ViolProvider>(builder: (_, ViolProvider data, __) {
                   return (data.state == ViewState.busy)
-                      ? Center(child: const CircularProgressIndicator())
+                      ? const Center(child: CircularProgressIndicator())
                       : Center(
                           child: HomeLikeButton(
                               iconData: Icons.edit,

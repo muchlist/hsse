@@ -9,7 +9,8 @@ import 'package:hsse/screen/components/violation_tile.dart';
 import 'package:hsse/search/viol_search.dart';
 import 'package:provider/provider.dart';
 
-var refreshKeyHistoryScreen = GlobalKey<RefreshIndicatorState>();
+GlobalKey<RefreshIndicatorState> refreshKeyHistoryScreen =
+    GlobalKey<RefreshIndicatorState>();
 
 class HistoryScreen extends StatelessWidget {
   const HistoryScreen({Key? key}) : super(key: key);
@@ -20,14 +21,14 @@ class HistoryScreen extends StatelessWidget {
       appBar: AppBar(
         elevation: 0,
         title: const Text("Riwayat Pelanggaran"),
-        actions: [
+        actions: <Widget>[
           IconButton(
-            icon: Icon(
+            icon: const Icon(
               CupertinoIcons.search,
               size: 28,
             ),
             onPressed: () async {
-              final searchResult = await showSearch(
+              final String? searchResult = await showSearch(
                 context: context,
                 delegate: ViolSearchDelegate(),
               );
@@ -41,7 +42,7 @@ class HistoryScreen extends StatelessWidget {
           ),
           IconButton(
             onPressed: () {},
-            icon: Icon(
+            icon: const Icon(
               CupertinoIcons.decrease_indent,
               size: 28,
             ),
@@ -50,12 +51,12 @@ class HistoryScreen extends StatelessWidget {
         ],
       ),
       floatingActionButton: FloatingActionButton.extended(
-          icon: Icon(Icons.add),
+          icon: const Icon(Icons.add),
           onPressed: () {
             Navigator.pushNamed(context, RouteGenerator.addViol);
           },
-          label: Text("Tambah")),
-      body: HistoryBody(),
+          label: const Text("Tambah")),
+      body: const HistoryBody(),
     );
   }
 }
@@ -67,21 +68,21 @@ class HistoryBody extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Consumer<ViolProvider>(builder: (_, data, __) {
+    return Consumer<ViolProvider>(builder: (_, ViolProvider data, __) {
       return Padding(
         padding: const EdgeInsets.symmetric(horizontal: 16),
         child: RefreshIndicator(
           key: refreshKeyHistoryScreen,
           onRefresh: () {
-            return Future.delayed(Duration.zero, () {
-              data.findViol().onError((error, _) {
+            return Future<void>.delayed(Duration.zero, () {
+              data.findViol().onError((Object? error, _) {
                 showToastError(context: context, message: error.toString());
               });
             });
           },
           child: StaggeredGridView.countBuilder(
             crossAxisCount: (screenIsMobile(context)) ? 2 : 3,
-            itemBuilder: (context, index) => GestureDetector(
+            itemBuilder: (BuildContext context, int index) => GestureDetector(
                 onTap: () {
                   data
                     ..removeDetail()
@@ -89,7 +90,7 @@ class HistoryBody extends StatelessWidget {
                   Navigator.pushNamed(context, RouteGenerator.detail);
                 },
                 child: ViolationTile(data: data.violList[index])),
-            staggeredTileBuilder: (_) => StaggeredTile.fit(1),
+            staggeredTileBuilder: (_) => const StaggeredTile.fit(1),
             itemCount: data.violList.length,
           ),
         ),

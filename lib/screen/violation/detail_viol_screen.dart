@@ -17,7 +17,8 @@ import 'package:image_picker/image_picker.dart';
 import 'package:provider/provider.dart';
 import 'package:url_launcher/url_launcher.dart';
 
-var refreshKeyDetailScreen = GlobalKey<RefreshIndicatorState>();
+GlobalKey<RefreshIndicatorState> refreshKeyDetailScreen =
+    GlobalKey<RefreshIndicatorState>();
 
 class ViolDetailScreen extends StatelessWidget {
   const ViolDetailScreen({Key? key}) : super(key: key);
@@ -29,7 +30,7 @@ class ViolDetailScreen extends StatelessWidget {
         elevation: 0,
         title: const Text("Detail Pelanggaran"),
       ),
-      body: ViolDetailScreenBody(),
+      body: const ViolDetailScreenBody(),
     );
   }
 }
@@ -47,54 +48,52 @@ class _ViolDetailScreenBodyState extends State<ViolDetailScreenBody> {
   late ViolProvider _violProvider;
 
   Future<void> _loadDetail() {
-    return Future.delayed(Duration.zero, () {
-      _violProvider.getDetail().onError((error, _) {
+    return Future<void>.delayed(Duration.zero, () {
+      _violProvider.getDetail().onError((Object? error, _) {
         showToastError(context: context, message: error.toString());
       });
     });
   }
 
   Future<void> _ready() {
-    return Future.delayed(Duration.zero, () {
-      _violProvider.sendConfirm()
-        ..then((_) {
-          showToastSuccess(
-              context: context,
-              message: "Dokumen berhasil dikirim, meminta persetujuan HSSE");
-        }).onError((error, _) {
-          showToastError(context: context, message: error.toString());
-        });
-    });
-  }
-
-  Future<void> _approve() {
-    return Future.delayed(Duration.zero, () {
-      _violProvider.approve()
-        ..then((_) {
-          showToastSuccess(
-              context: context, message: "Dokumen berhasil di approve");
-        }).onError((error, _) {
-          showToastError(context: context, message: error.toString());
-        });
-    });
-  }
-
-  Future<void> _reject() {
-    return Future.delayed(Duration.zero, () {
-      _violProvider.reject().onError((error, _) {
+    return Future<void>.delayed(Duration.zero, () {
+      _violProvider.sendConfirm().then((_) {
+        showToastSuccess(
+            context: context,
+            message: "Dokumen berhasil dikirim, meminta persetujuan HSSE");
+      }).onError((Object? error, _) {
         showToastError(context: context, message: error.toString());
       });
     });
   }
 
-  File? _image;
-  final picker = ImagePicker();
+  Future<void> _approve() {
+    return Future<void>.delayed(Duration.zero, () {
+      _violProvider.approve().then((_) {
+        showToastSuccess(
+            context: context, message: "Dokumen berhasil di approve");
+      }).onError((Object? error, _) {
+        showToastError(context: context, message: error.toString());
+      });
+    });
+  }
 
-  Future _getImageAndUpload(
+  Future<void> _reject() {
+    return Future<void>.delayed(Duration.zero, () {
+      _violProvider.reject().onError((Object? error, _) {
+        showToastError(context: context, message: error.toString());
+      });
+    });
+  }
+
+  late File? _image;
+  final ImagePicker picker = ImagePicker();
+
+  Future<void> _getImageAndUpload(
       {required BuildContext context,
       required ImageSource source,
       required String id}) async {
-    final pickedFile = await picker.getImage(source: source);
+    final PickedFile? pickedFile = await picker.getImage(source: source);
     if (pickedFile != null) {
       _image = File(pickedFile.path);
     } else {
@@ -102,25 +101,26 @@ class _ViolDetailScreenBodyState extends State<ViolDetailScreenBody> {
     }
 
     // compress and upload
-    await _violProvider.uploadImage(_image!).then((value) {
+    await _violProvider.uploadImage(_image!).then((bool value) {
       if (value) {
         showToastSuccess(
-            context: context,
-            message: "Berhasil mengupload gambar",
-            onTop: true);
+          context: context,
+          message: "Berhasil mengupload gambar",
+        );
       }
-    }).onError((error, _) {
+    }).onError((Object? error, _) {
       showToastError(context: context, message: error.toString());
-      return Future.error(error.toString());
+      // ignore: prefer_void_to_null
+      return Future<Null>.error(error.toString());
     });
   }
 
   Future<void> _deleteImage(String imageWithExtention) {
-    return Future.delayed(Duration.zero, () {
+    return Future<void>.delayed(Duration.zero, () {
       _violProvider.deleteImage(imageWithExtention).then((_) {
         showToastSuccess(context: context, message: "Berhasil menghapus foto");
-      }).onError((error, _) {
-        print(error);
+      }).onError((Object? error, _) {
+        showToastError(context: context, message: error.toString());
       });
     });
   }
@@ -130,7 +130,6 @@ class _ViolDetailScreenBodyState extends State<ViolDetailScreenBody> {
       await launch(
         url,
         forceSafariVC: false,
-        forceWebView: false,
       );
     } else {
       showToastError(context: context, message: "Error saat membuka link pdf!");
@@ -147,17 +146,17 @@ class _ViolDetailScreenBodyState extends State<ViolDetailScreenBody> {
   @override
   Widget build(BuildContext context) {
     return Consumer<ViolProvider>(
-      builder: (_, data, __) {
-        var detail = data.violDetail;
+      builder: (_, ViolProvider data, __) {
+        final ViolData detail = data.violDetail;
 
         if (data.detailState == ViewState.busy) {
-          return Center(
+          return const Center(
             child: CircularProgressIndicator(),
           );
         }
 
         return Stack(
-          children: [
+          children: <Widget>[
             Positioned(
               bottom: 0,
               top: 0,
@@ -172,7 +171,7 @@ class _ViolDetailScreenBodyState extends State<ViolDetailScreenBody> {
                       padding: const EdgeInsets.symmetric(horizontal: 16),
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
+                        children: <Widget>[
                           const Text("TRUCK"),
                           verticalSpaceSmall,
                           buildUpperScreen(detail),
@@ -184,7 +183,7 @@ class _ViolDetailScreenBodyState extends State<ViolDetailScreenBody> {
                           const Text("LAMPIRAN"),
                           verticalSpaceSmall,
                           // jika foto 0 dan state 2 maka hilangkan space kosong
-                          if (!(detail.images.length == 0 && detail.state == 2))
+                          if (!(detail.images.isEmpty && detail.state == 2))
                             buildPhotoList(detail),
                           verticalSpaceMedium,
                           if (detail.state == 2) // approved
@@ -193,7 +192,7 @@ class _ViolDetailScreenBodyState extends State<ViolDetailScreenBody> {
                                   iconData: Icons.download,
                                   text: "Download PDF",
                                   tapTap: () {
-                                    var url =
+                                    final String url =
                                         "${ConstUrl.baseUrl}pdf/${detail.id}.pdf";
                                     _launchInBrowser(url);
                                   }),
@@ -209,7 +208,7 @@ class _ViolDetailScreenBodyState extends State<ViolDetailScreenBody> {
                                         context, RouteGenerator.editViol);
                                   }),
                             ),
-                          SizedBox(height: 150)
+                          const SizedBox(height: 150)
                         ],
                       ),
                     ),
@@ -242,7 +241,7 @@ class _ViolDetailScreenBodyState extends State<ViolDetailScreenBody> {
         padding: const EdgeInsets.all(14.0),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
+          children: <Widget>[
             const Text(
               "🚚  Nomor Lambung",
               style: TextStyle(fontWeight: FontWeight.bold),
@@ -271,9 +270,10 @@ class _ViolDetailScreenBodyState extends State<ViolDetailScreenBody> {
               "🔢 Pelanggaran ke -",
               style: TextStyle(fontWeight: FontWeight.bold),
             ),
-            (data.state == 2)
-                ? descText("${data.nViol} (terkonfirmasi sistem)")
-                : descText("${data.nViol} (perkiraan)"),
+            if (data.state == 2)
+              descText("${data.nViol} (terkonfirmasi sistem)")
+            else
+              descText("${data.nViol} (perkiraan)"),
             verticalSpaceSmall,
             const Text(
               "🛣  Lokasi",
@@ -301,7 +301,7 @@ class _ViolDetailScreenBodyState extends State<ViolDetailScreenBody> {
         padding: const EdgeInsets.all(14.0),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
+          children: <Widget>[
             const Text(
               "👮‍♂️  Pelapor",
               style: TextStyle(fontWeight: FontWeight.bold),
@@ -326,7 +326,7 @@ class _ViolDetailScreenBodyState extends State<ViolDetailScreenBody> {
         padding: const EdgeInsets.all(8.0),
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-          children: [
+          children: <Widget>[
             ConfirmButton(
               iconData: Icons.check,
               text: "Setuju ",
@@ -351,10 +351,9 @@ class _ViolDetailScreenBodyState extends State<ViolDetailScreenBody> {
       child: Padding(
         padding: const EdgeInsets.all(8.0),
         child: Row(
-          mainAxisAlignment: MainAxisAlignment.start,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Icon(
+            const Icon(
               Icons.double_arrow_sharp,
               color: Colors.white,
             ),
@@ -362,18 +361,18 @@ class _ViolDetailScreenBodyState extends State<ViolDetailScreenBody> {
             Flexible(
               child: Text(
                 "DISETUJUI OLEH ${data.approvedBy}",
-                style: TextStyle(color: Colors.white),
+                style: const TextStyle(color: Colors.white),
                 overflow: TextOverflow.ellipsis,
                 maxLines: 2,
               ),
             ),
             horizontalSpaceTiny,
-            Icon(
+            const Icon(
               Icons.double_arrow_sharp,
               color: Colors.white,
             ),
             horizontalSpaceRegular,
-            Flexible(
+            const Flexible(
               child: Text(
                 "EMAIL DIKIRIM",
                 style: TextStyle(color: Colors.white),
@@ -394,15 +393,14 @@ class _ViolDetailScreenBodyState extends State<ViolDetailScreenBody> {
       child: Padding(
         padding: const EdgeInsets.all(8.0),
         child: Row(
-          mainAxisAlignment: MainAxisAlignment.start,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Icon(
+            const Icon(
               Icons.drafts,
               color: Colors.white,
             ),
             horizontalSpaceRegular,
-            Expanded(
+            const Expanded(
               child: Text(
                 "DRAFT\nHarap lengkapi dokumen sebelum ke proses selanjutnya",
                 style: TextStyle(color: Colors.white, fontSize: 12),
@@ -423,17 +421,17 @@ class _ViolDetailScreenBodyState extends State<ViolDetailScreenBody> {
   }
 
   Widget buildPhotoList(ViolData data) {
-    return Container(
+    return SizedBox(
       height: 150,
       child: DisableOverScrollGlow(
         child: ListView.builder(
           shrinkWrap: true,
           scrollDirection: Axis.horizontal,
           itemCount: data.images.length + 1,
-          itemBuilder: (ctx, index) {
+          itemBuilder: (BuildContext ctx, int index) {
             if (index == data.images.length) {
               return (data.approvedAt > 0)
-                  ? SizedBox.shrink()
+                  ? const SizedBox.shrink()
                   : Padding(
                       padding: const EdgeInsets.symmetric(horizontal: 30),
                       child: GestureDetector(
@@ -449,7 +447,7 @@ class _ViolDetailScreenBodyState extends State<ViolDetailScreenBody> {
                               source: ImageSource.gallery,
                               id: data.id);
                         },
-                        child: Icon(
+                        child: const Icon(
                           Icons.add_circle_outline,
                           size: 40,
                           color: Colors.grey,
@@ -463,7 +461,7 @@ class _ViolDetailScreenBodyState extends State<ViolDetailScreenBody> {
                   if (data.state == 2) {
                     return;
                   }
-                  final confirmed = await confirmDialog(
+                  final bool? confirmed = await confirmDialog(
                       context,
                       "Menghapus gambar",
                       "Apakah yakin ingin menghapus gambar ini ?");
