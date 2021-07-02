@@ -52,7 +52,7 @@ class HistoryScreen extends StatelessWidget {
       floatingActionButton: FloatingActionButton.extended(
           icon: Icon(Icons.add),
           onPressed: () {
-            // Navigator.pushNamed(context, RouteGenerator.computerAdd);
+            Navigator.pushNamed(context, RouteGenerator.addViol);
           },
           label: Text("Tambah")),
       body: HistoryBody(),

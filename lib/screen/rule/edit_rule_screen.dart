@@ -15,7 +15,7 @@ class EditRulesScreen extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         elevation: 0,
-        title: const Text("Tambah Aturan"),
+        title: const Text("Edit Aturan"),
       ),
       body: EditRulesBody(),
     );

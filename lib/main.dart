@@ -6,6 +6,7 @@ import 'package:hsse/api/services/auth_service.dart';
 import 'package:hsse/api/services/rules_service.dart';
 import 'package:hsse/providers/auth.dart';
 import 'package:hsse/providers/rules.dart';
+import 'package:hsse/providers/truck.dart';
 import 'package:hsse/providers/viol.dart';
 import 'package:hsse/screen/landing/landing.dart';
 import 'package:hsse/singleton/shared_pref.dart';
@@ -14,6 +15,7 @@ import 'package:provider/provider.dart';
 import 'package:hsse/config/theme_color.dart';
 import 'package:hsse/router/routes.dart';
 
+import 'api/services/truck_service.dart';
 import 'api/services/viol_service.dart';
 
 void main() async {
@@ -42,6 +44,7 @@ class MyApp extends StatelessWidget {
   final AuthService _authService = AuthService();
   final ViolService _violService = ViolService();
   final RulesService _rulesService = RulesService();
+  final TruckService _truckService = TruckService();
   // final TruckService _truckService = TruckService();
 
   @override
@@ -52,6 +55,8 @@ class MyApp extends StatelessWidget {
         ChangeNotifierProvider(create: (context) => AuthProvider(_authService)),
         ChangeNotifierProvider(
             create: (context) => RulesProvider(_rulesService)),
+        ChangeNotifierProvider(
+            create: (context) => TruckProvider(_truckService)),
       ],
       child: MaterialApp(
         title: _title,

@@ -63,6 +63,38 @@ class TruckProvider extends ChangeNotifier {
   }
 
 // ========================================================
+  // search truck
+  // truck search list cache
+  List<TruckMinData> _truckSearchList = [];
+  List<TruckMinData> get truckSearchList {
+    return UnmodifiableListView(_truckSearchList);
+  }
+
+  // * Mendapatkan truck
+  Future<void> searchTruck(String noIdentity) async {
+    final filter = FilterTruck(
+        branch: SharedPrefs().getBranch(), identity: noIdentity.toUpperCase());
+
+    var error = "";
+    try {
+      final response = await _truckService.findTruck(filter);
+      if (response.error != null) {
+        error = response.error!.message;
+      } else {
+        _truckSearchList = response.data;
+      }
+    } catch (e) {
+      error = e.toString();
+    }
+
+    setState(ViewState.idle);
+
+    if (error.isNotEmpty) {
+      return Future.error(error);
+    }
+  }
+
+// ========================================================
   // detail truck
 
   // * detail state

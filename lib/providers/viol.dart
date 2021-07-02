@@ -84,7 +84,7 @@ class ViolProvider extends ChangeNotifier {
   }
 
   Future<void> searchViol(String noIdentity) async {
-    var filter = FilterViol(lambung: noIdentity);
+    var filter = FilterViol(lambung: noIdentity.toUpperCase());
 
     var error = "";
     try {
@@ -211,6 +211,7 @@ class ViolProvider extends ChangeNotifier {
 
   // return future true jika add viol berhasil
   // memanggil findViol sehingga tidak perlu notifyListener
+  // meremove detail yang ada dan setID ke id hasil return
   Future<bool> addViol(ViolRequest payload) async {
     setState(ViewState.busy);
     var error = "";
@@ -219,6 +220,11 @@ class ViolProvider extends ChangeNotifier {
       final response = await _violService.createViol(payload);
       if (response.error != null) {
         error = response.error!.message;
+      } else {
+        // response.data = "menambahkan data berhasil, ID : asdjasodasiodj"
+        final objectID = response.data?.split(" ");
+        removeDetail();
+        setID(objectID?.last ?? "");
       }
     } catch (e) {
       error = e.toString();

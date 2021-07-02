@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:hsse/config/config.dart';
 
 class CustomTextForm extends StatelessWidget {
   const CustomTextForm({
@@ -27,7 +26,7 @@ class CustomTextForm extends StatelessWidget {
       maxLines: maxLines,
       decoration: const InputDecoration(
         filled: true,
-        fillColor: TColor.secondaryBackground,
+        fillColor: Colors.white,
         enabledBorder: InputBorder.none,
         border: InputBorder.none,
       ),

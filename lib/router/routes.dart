@@ -4,6 +4,7 @@ import 'package:hsse/screen/login/login_screen.dart';
 import 'package:hsse/screen/rule/add_rule_screen.dart';
 import 'package:hsse/screen/rule/edit_rule_screen.dart';
 import 'package:hsse/screen/rule/rules_screen.dart';
+import 'package:hsse/screen/violation/add_viol_screen.dart';
 import 'package:hsse/screen/violation/history_screen.dart';
 import 'package:hsse/screen/violation/viol_detail.dart';
 
@@ -11,6 +12,7 @@ class RouteGenerator {
   static const String homeHsse = '/home';
   static const String login = '/login';
   static const String detail = '/detail';
+  static const String addViol = '/add-viol';
   static const String history = '/history';
   static const String rules = '/rules';
   static const String addRules = '/add-rules';
@@ -28,6 +30,8 @@ class RouteGenerator {
         return MaterialPageRoute(builder: (_) => HistoryScreen());
       case detail:
         return MaterialPageRoute(builder: (_) => ViolDetailScreen());
+      case addViol:
+        return MaterialPageRoute(builder: (_) => AddViolScreen());
       case rules:
         return MaterialPageRoute(builder: (_) => RulesScreen());
       case addRules:
