@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:hsse/api/json_models/responses/viol_resp.dart';
 import 'package:hsse/config/config.dart';
 import 'package:hsse/providers/viol.dart';
+import 'package:hsse/router/routes.dart';
 import 'package:hsse/screen/components/cached_image.dart';
 import 'package:hsse/screen/components/confirm_dialog.dart';
 import 'package:hsse/screen/components/custom_button.dart';
@@ -204,7 +205,8 @@ class _ViolDetailScreenBodyState extends State<ViolDetailScreenBody> {
                                   text: "Edit ",
                                   color: Colors.deepOrange.shade300,
                                   tapTap: () {
-                                    // Navigator
+                                    Navigator.pushNamed(
+                                        context, RouteGenerator.editViol);
                                   }),
                             ),
                           SizedBox(height: 150)

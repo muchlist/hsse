@@ -7,9 +7,9 @@ class ViolEditRequest {
   ViolEditRequest({
     required this.filterTimestamp,
     required this.noIdentity,
-    required this.typeViolEditation,
-    required this.detailViolEditation,
-    required this.timeViolEditation,
+    required this.typeViolation,
+    required this.detailViolation,
+    required this.timeViolation,
     required this.location,
   });
 
@@ -17,12 +17,12 @@ class ViolEditRequest {
   final int filterTimestamp;
   @JsonKey(name: "no_identity")
   final String noIdentity;
-  @JsonKey(name: "type_viol_editation")
-  final String typeViolEditation;
-  @JsonKey(name: "detail_viol_editation")
-  final String detailViolEditation;
-  @JsonKey(name: "time_viol_editation")
-  final int timeViolEditation;
+  @JsonKey(name: "type_violation")
+  final String typeViolation;
+  @JsonKey(name: "detail_violation")
+  final String detailViolation;
+  @JsonKey(name: "time_violation")
+  final int timeViolation;
   final String location;
 
   factory ViolEditRequest.fromJson(Map<String, dynamic> json) =>
