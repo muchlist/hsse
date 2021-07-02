@@ -28,16 +28,16 @@ class AddRulesBody extends StatefulWidget {
 }
 
 class _AddRulesBodyState extends State<AddRulesBody> {
-  final _key = GlobalKey<FormState>();
+  final GlobalKey<FormState> _key = GlobalKey<FormState>();
 
-  final scoreController = TextEditingController();
-  final blockController = TextEditingController();
-  final descController = TextEditingController();
+  final TextEditingController scoreController = TextEditingController();
+  final TextEditingController blockController = TextEditingController();
+  final TextEditingController descController = TextEditingController();
 
   void _addRules() {
     if (_key.currentState?.validate() ?? false) {
-      var score = 0;
-      var blockDay = 0;
+      int score = 0;
+      int blockDay = 0;
       if (scoreController.text.isNotEmpty) {
         score = int.parse(scoreController.text);
       }
@@ -46,24 +46,26 @@ class _AddRulesBodyState extends State<AddRulesBody> {
       }
 
       // Payload
-      final payload = RulesRequest(
+      final RulesRequest payload = RulesRequest(
           score: score,
           blockTime: blockDay * 86400,
           description: descController.text);
 
       // Call Provider
-      Future.delayed(
+      Future<void>.delayed(
           Duration.zero,
-          () => context.read<RulesProvider>().addRules(payload).then((value) {
+          () => context
+                  .read<RulesProvider>()
+                  .addRules(payload)
+                  .then((bool value) {
                 if (value) {
                   Navigator.of(context).pop();
                   showToastSuccess(
                       context: context, message: "Berhasil menambahkan aturan");
                 }
-              }).onError((error, _) {
+              }).onError((Object? error, _) {
                 if (error != null) {
-                  showToastError(
-                      context: context, message: error.toString(), onTop: true);
+                  showToastError(context: context, message: error.toString());
                 }
               }));
     }
@@ -88,7 +90,7 @@ class _AddRulesBodyState extends State<AddRulesBody> {
             key: _key,
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
+              children: <Widget>[
                 // * Skor pelanggaran text ------------------------
                 const Text(
                   "Skor pelanggaran",
@@ -97,7 +99,7 @@ class _AddRulesBodyState extends State<AddRulesBody> {
                 CustomTextForm(
                   controller: scoreController,
                   textInputType: TextInputType.number,
-                  validator: (text) {
+                  validator: (String? text) {
                     if (text == null || text.isEmpty) {
                       return null;
                     } else if (int.tryParse(text) != null &&
@@ -119,7 +121,7 @@ class _AddRulesBodyState extends State<AddRulesBody> {
                   controller: descController,
                   minLines: 2,
                   maxLines: 4,
-                  validator: (text) {
+                  validator: (String? text) {
                     if (text == null || text.isEmpty) {
                       return "Desc tidak boleh kosong";
                     }
@@ -138,7 +140,7 @@ class _AddRulesBodyState extends State<AddRulesBody> {
                 CustomTextForm(
                   controller: blockController,
                   textInputType: TextInputType.number,
-                  validator: (text) {
+                  validator: (String? text) {
                     if (text == null || text.isEmpty) {
                       return null;
                     } else if (int.tryParse(text) != null &&
@@ -151,9 +153,9 @@ class _AddRulesBodyState extends State<AddRulesBody> {
 
                 verticalSpaceMedium,
 
-                Consumer<RulesProvider>(builder: (_, data, __) {
+                Consumer<RulesProvider>(builder: (_, RulesProvider data, __) {
                   return (data.state == ViewState.busy)
-                      ? Center(child: const CircularProgressIndicator())
+                      ? const Center(child: CircularProgressIndicator())
                       : Center(
                           child: HomeLikeButton(
                               iconData: CupertinoIcons.add,

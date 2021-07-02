@@ -7,7 +7,8 @@ import 'package:hsse/screen/components/flushbar.dart';
 import 'package:hsse/utils/utils.dart';
 import 'package:provider/provider.dart';
 
-var refreshKeyRulesScreen = GlobalKey<RefreshIndicatorState>();
+GlobalKey<RefreshIndicatorState> refreshKeyRulesScreen =
+    GlobalKey<RefreshIndicatorState>();
 
 class RulesScreen extends StatelessWidget {
   const RulesScreen({Key? key}) : super(key: key);
@@ -20,12 +21,12 @@ class RulesScreen extends StatelessWidget {
         title: const Text("Aturan"),
       ),
       floatingActionButton: FloatingActionButton.extended(
-          icon: Icon(Icons.add),
+          icon: const Icon(Icons.add),
           onPressed: () {
             Navigator.pushNamed(context, RouteGenerator.addRules);
           },
-          label: Text("Tambah")),
-      body: RulesBody(),
+          label: const Text("Tambah")),
+      body: const RulesBody(),
     );
   }
 }
@@ -41,8 +42,8 @@ class RulesBody extends StatefulWidget {
 
 class _RulesBodyState extends State<RulesBody> {
   Future<void> _loadRules() {
-    return Future.delayed(Duration.zero, () {
-      context.read<RulesProvider>().findRules().onError((error, _) {
+    return Future<void>.delayed(Duration.zero, () {
+      context.read<RulesProvider>().findRules().onError((Object? error, _) {
         showToastError(context: context, message: error.toString());
       });
     });
@@ -56,7 +57,7 @@ class _RulesBodyState extends State<RulesBody> {
 
   @override
   Widget build(BuildContext context) {
-    return Consumer<RulesProvider>(builder: (_, data, __) {
+    return Consumer<RulesProvider>(builder: (_, RulesProvider data, __) {
       return Padding(
         padding: const EdgeInsets.symmetric(horizontal: 16),
         child: RefreshIndicator(

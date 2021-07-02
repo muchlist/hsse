@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:hsse/api/json_models/requests/rules_edit_req.dart';
+import 'package:hsse/api/json_models/responses/rules_resp.dart';
 import 'package:hsse/screen/components/custom_button.dart';
 import 'package:hsse/screen/components/flushbar.dart';
 import 'package:hsse/screen/components/text_form.dart';
@@ -28,16 +29,16 @@ class EditRulesBody extends StatefulWidget {
 }
 
 class _EditRulesBodyState extends State<EditRulesBody> {
-  final _key = GlobalKey<FormState>();
+  final GlobalKey<FormState> _key = GlobalKey<FormState>();
 
-  final scoreController = TextEditingController();
-  final blockController = TextEditingController();
-  final descController = TextEditingController();
+  final TextEditingController scoreController = TextEditingController();
+  final TextEditingController blockController = TextEditingController();
+  final TextEditingController descController = TextEditingController();
 
   void _editRules(int timeStamp) {
     if (_key.currentState?.validate() ?? false) {
-      var score = 0;
-      var blockDay = 0;
+      int score = 0;
+      int blockDay = 0;
       if (scoreController.text.isNotEmpty) {
         score = int.parse(scoreController.text);
       }
@@ -46,7 +47,7 @@ class _EditRulesBodyState extends State<EditRulesBody> {
       }
 
       // Payload
-      final payload = RulesEditRequest(
+      final RulesEditRequest payload = RulesEditRequest(
         score: score,
         blockTime: blockDay * 86400,
         description: descController.text,
@@ -54,19 +55,19 @@ class _EditRulesBodyState extends State<EditRulesBody> {
       );
 
       // Call Provider
-      Future.delayed(
+      Future<void>.delayed(
         Duration.zero,
-        () => context.read<RulesProvider>().editRules(payload).then((value) {
+        () =>
+            context.read<RulesProvider>().editRules(payload).then((bool value) {
           if (value) {
             Navigator.of(context).pop();
             showToastSuccess(
                 context: context, message: "Berhasil mengubah aturan");
           }
         }).onError(
-          (error, _) {
+          (Object? error, _) {
             if (error != null) {
-              showToastError(
-                  context: context, message: error.toString(), onTop: true);
+              showToastError(context: context, message: error.toString());
             }
           },
         ),
@@ -85,19 +86,18 @@ class _EditRulesBodyState extends State<EditRulesBody> {
 
   @override
   void initState() {
-    Future.delayed(
+    Future<void>.delayed(
       Duration.zero,
-      () => context.read<RulesProvider>().getDetail().then((value) {
+      () => context.read<RulesProvider>().getDetail().then((RulesData value) {
         setState(() {
           scoreController.text = value.score.toString();
           descController.text = value.description;
           blockController.text = (value.blockTime ~/ 86400).toString();
         });
       }).onError(
-        (error, _) {
+        (Object? error, _) {
           if (error != null) {
-            showToastError(
-                context: context, message: error.toString(), onTop: true);
+            showToastError(context: context, message: error.toString());
           }
         },
       ),
@@ -115,7 +115,7 @@ class _EditRulesBodyState extends State<EditRulesBody> {
             key: _key,
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
+              children: <Widget>[
                 // * Skor pelanggaran text ------------------------
                 const Text(
                   "Skor pelanggaran",
@@ -124,7 +124,7 @@ class _EditRulesBodyState extends State<EditRulesBody> {
                 CustomTextForm(
                   controller: scoreController,
                   textInputType: TextInputType.number,
-                  validator: (text) {
+                  validator: (String? text) {
                     if (text == null || text.isEmpty) {
                       return null;
                     } else if (int.tryParse(text) != null &&
@@ -146,7 +146,7 @@ class _EditRulesBodyState extends State<EditRulesBody> {
                   controller: descController,
                   minLines: 2,
                   maxLines: 4,
-                  validator: (text) {
+                  validator: (String? text) {
                     if (text == null || text.isEmpty) {
                       return "Desc tidak boleh kosong";
                     }
@@ -165,7 +165,7 @@ class _EditRulesBodyState extends State<EditRulesBody> {
                 CustomTextForm(
                   controller: blockController,
                   textInputType: TextInputType.number,
-                  validator: (text) {
+                  validator: (String? text) {
                     if (text == null || text.isEmpty) {
                       return null;
                     } else if (int.tryParse(text) != null &&
@@ -178,9 +178,9 @@ class _EditRulesBodyState extends State<EditRulesBody> {
 
                 verticalSpaceMedium,
 
-                Consumer<RulesProvider>(builder: (_, data, __) {
+                Consumer<RulesProvider>(builder: (_, RulesProvider data, __) {
                   return (data.state == ViewState.busy)
-                      ? Center(child: const CircularProgressIndicator())
+                      ? const Center(child: CircularProgressIndicator())
                       : Center(
                           child: HomeLikeButton(
                               iconData: CupertinoIcons.add,
