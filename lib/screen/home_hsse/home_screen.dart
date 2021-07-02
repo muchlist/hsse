@@ -15,7 +15,8 @@ import 'package:hsse/singleton/shared_pref.dart';
 import 'package:hsse/utils/enum_state.dart';
 import 'package:provider/provider.dart';
 
-var refreshKeyHomeHsseScreen = GlobalKey<RefreshIndicatorState>();
+GlobalKey<RefreshIndicatorState> refreshKeyHomeHsseScreen =
+    GlobalKey<RefreshIndicatorState>();
 
 class HomeHsseScreen extends StatefulWidget {
   const HomeHsseScreen({Key? key}) : super(key: key);
@@ -31,8 +32,8 @@ class _HomeHsseScreenState extends State<HomeHsseScreen> {
           text: "Hi  ${SharedPrefs().getName()}\n",
           style: Theme.of(context).textTheme.bodyText1!.copyWith(
               fontSize: 20, color: Colors.black, fontWeight: FontWeight.bold),
-          children: <TextSpan>[
-            const TextSpan(
+          children: const <TextSpan>[
+            TextSpan(
                 text: "Selamat datang",
                 style: TextStyle(
                     fontSize: 12,
@@ -50,7 +51,7 @@ class _HomeHsseScreenState extends State<HomeHsseScreen> {
         title: buildHomeTitle(context),
         actions: [
           IconButton(
-            icon: Icon(
+            icon: const Icon(
               CupertinoIcons.person_crop_circle,
               size: 28,
             ),
@@ -59,7 +60,7 @@ class _HomeHsseScreenState extends State<HomeHsseScreen> {
           horizontalSpaceSmall
         ],
       ),
-      body: HomeHsseBody(),
+      body: const HomeHsseBody(),
     );
   }
 }
@@ -77,8 +78,8 @@ class _HomeHsseBodyState extends State<HomeHsseBody> {
   late ViolProvider _violProvider;
 
   Future<void> _loadViol() {
-    return Future.delayed(Duration.zero, () {
-      _violProvider.findViol().onError((error, _) {
+    return Future<void>.delayed(Duration.zero, () {
+      _violProvider.findViol().onError((Object? error, _) {
         showToastError(context: context, message: error.toString());
       });
     });
@@ -93,23 +94,24 @@ class _HomeHsseBodyState extends State<HomeHsseBody> {
 
   @override
   Widget build(BuildContext context) {
-    return Consumer<ViolProvider>(builder: (_, data, __) {
+    return Consumer<ViolProvider>(builder: (_, ViolProvider data, __) {
       return Stack(
         alignment: Alignment.center,
-        children: [
+        children: <Widget>[
           Positioned(
               top: 0,
               bottom: 0,
               left: 0,
               right: 0,
-              child: (data.violList.length != 0)
+              child: (data.violList.isNotEmpty)
                   ? bulldHomeHsseBody(data)
                   : (data.state == ViewState.idle)
                       ? NoConnectionBox(loadTap: _loadViol)
-                      : Center()),
-          (data.state == ViewState.busy)
-              ? Center(child: CircularProgressIndicator())
-              : Center(),
+                      : const Center()),
+          if (data.state == ViewState.busy)
+            const Center(child: CircularProgressIndicator())
+          else
+            const Center(),
         ],
       );
     });
@@ -123,9 +125,9 @@ class _HomeHsseBodyState extends State<HomeHsseBody> {
         onRefresh: _loadViol,
         child: DisableOverScrollGlow(
           child: CustomScrollView(slivers: <Widget>[
-            if (data.violListReady.length != 0)
+            if (data.violListReady.isNotEmpty)
               buildSliverHeadText("Perlu persetujuan :"),
-            if (data.violListReady.length != 0) buildGridViewReady(data),
+            if (data.violListReady.isNotEmpty) buildGridViewReady(data),
             buildSliverHeadText("Riwayat :"),
             buildGridViewApproved(data),
             SliverToBoxAdapter(
@@ -150,7 +152,7 @@ class _HomeHsseBodyState extends State<HomeHsseBody> {
   Widget buildGridViewReady(ViolProvider data) {
     return SliverStaggeredGrid.countBuilder(
       crossAxisCount: (screenIsMobile(context)) ? 2 : 3,
-      itemBuilder: (context, index) => GestureDetector(
+      itemBuilder: (BuildContext context, int index) => GestureDetector(
           onTap: () {
             data
               ..removeDetail()
@@ -158,7 +160,7 @@ class _HomeHsseBodyState extends State<HomeHsseBody> {
             Navigator.pushNamed(context, RouteGenerator.detail);
           },
           child: ViolationTile(data: data.violListReady[index])),
-      staggeredTileBuilder: (_) => StaggeredTile.fit(1),
+      staggeredTileBuilder: (_) => const StaggeredTile.fit(1),
       itemCount: data.violListReady.length,
     );
   }
@@ -166,7 +168,7 @@ class _HomeHsseBodyState extends State<HomeHsseBody> {
   Widget buildGridViewApproved(ViolProvider data) {
     return SliverStaggeredGrid.countBuilder(
       crossAxisCount: (screenIsMobile(context)) ? 2 : 3,
-      itemBuilder: (context, index) => GestureDetector(
+      itemBuilder: (BuildContext context, int index) => GestureDetector(
           onTap: () {
             data
               ..removeDetail()
@@ -174,7 +176,7 @@ class _HomeHsseBodyState extends State<HomeHsseBody> {
             Navigator.pushNamed(context, RouteGenerator.detail);
           },
           child: ViolationTile(data: data.violListApproved[index])),
-      staggeredTileBuilder: (_) => StaggeredTile.fit(1),
+      staggeredTileBuilder: (_) => const StaggeredTile.fit(1),
       itemCount: data.violListApproved.length,
     );
   }
@@ -184,7 +186,7 @@ class _HomeHsseBodyState extends State<HomeHsseBody> {
         child: Padding(
       padding: const EdgeInsets.symmetric(vertical: 8),
       child: Text(text,
-          style: TextStyle(
+          style: const TextStyle(
             fontSize: 18,
           )),
     ));
@@ -192,7 +194,7 @@ class _HomeHsseBodyState extends State<HomeHsseBody> {
 
   Widget buildMenuList() {
     return SliverToBoxAdapter(
-        child: Container(
+        child: SizedBox(
             height: 120,
             child: ListView(
               scrollDirection: Axis.horizontal,

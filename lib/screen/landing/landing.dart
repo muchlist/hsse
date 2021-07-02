@@ -11,14 +11,14 @@ class LandingPage extends StatefulWidget {
 class _LandingPageState extends State<LandingPage> {
   String _token = "";
 
-  _loadToken() async {
+  Future<void> _loadToken() async {
     _token = SharedPrefs().getToken() ?? "";
     if (_token == "") {
-      await Future(() {
+      await Future<void>(() {
         Navigator.pushReplacementNamed(context, RouteGenerator.login);
       });
     } else {
-      await Future(() {
+      await Future<void>(() {
         Navigator.pushReplacementNamed(context, RouteGenerator.homeHsse);
       });
     }
@@ -32,8 +32,8 @@ class _LandingPageState extends State<LandingPage> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: const Center(child: Text(". . .")),
+    return const Scaffold(
+      body: Center(child: Text(". . .")),
     );
   }
 }
