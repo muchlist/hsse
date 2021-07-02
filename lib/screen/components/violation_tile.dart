@@ -6,9 +6,8 @@ import '../../config/theme_color.dart';
 import '../../utils/utils.dart';
 
 class ViolationTile extends StatelessWidget {
-  final ViolMinData data;
-
   const ViolationTile({Key? key, required this.data}) : super(key: key);
+  final ViolMinData data;
 
   @override
   Widget build(BuildContext context) {
@@ -21,7 +20,7 @@ class ViolationTile extends StatelessWidget {
           padding: const EdgeInsets.all(8.0),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
+            children: <Widget>[
               if (data.images.isNotEmpty)
                 Hero(
                     tag: data.images[0],
@@ -33,25 +32,25 @@ class ViolationTile extends StatelessWidget {
                 height: 5,
               ),
               Text(data.noIdentity,
-                  style: TextStyle(fontWeight: FontWeight.bold)),
+                  style: const TextStyle(fontWeight: FontWeight.bold)),
               const SizedBox(
                 height: 5,
               ),
               Padding(
-                  padding: EdgeInsets.only(left: 8),
+                  padding: const EdgeInsets.only(left: 8),
                   child: Text(data.detailViolation,
-                      style: TextStyle(
+                      style: const TextStyle(
                           fontWeight: FontWeight.w100, color: Colors.grey))),
               const SizedBox(
                 height: 5,
               ),
               Row(
-                children: [
+                children: <Widget>[
                   getIcon(data.state),
                   const Spacer(),
                   Text(
                     data.timeViolation.getCompleteDateString(),
-                    style: TextStyle(
+                    style: const TextStyle(
                         color: Colors.grey,
                         fontSize: 12,
                         fontStyle: FontStyle.italic),

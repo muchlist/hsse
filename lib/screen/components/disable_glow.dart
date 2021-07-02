@@ -1,9 +1,8 @@
 import 'package:flutter/material.dart';
 
 class DisableOverScrollGlow extends StatelessWidget {
+  const DisableOverScrollGlow({required this.child});
   final Widget child;
-
-  DisableOverScrollGlow({required this.child});
 
   @override
   Widget build(BuildContext context) {

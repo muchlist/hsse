@@ -3,20 +3,21 @@ import 'package:flutter/material.dart';
 import 'package:hsse/config/config.dart';
 
 class CachedImage extends StatelessWidget {
+  const CachedImage(
+      {required this.urlPath, this.width = 125.0, this.height = 125.0});
   final String urlPath;
   final double width;
   final double height;
-
-  const CachedImage(
-      {required this.urlPath, this.width = 125.0, this.height = 125.0});
 
   @override
   Widget build(BuildContext context) {
     return CachedNetworkImage(
       imageUrl: urlPath,
-      imageBuilder: (context, imageProvider) => ClipRRect(
+      imageBuilder:
+          (BuildContext context, ImageProvider<Object> imageProvider) =>
+              ClipRRect(
         borderRadius: BorderRadius.circular(5.0),
-        child: Container(
+        child: SizedBox(
           width: width,
           height: height,
           child: Image(
@@ -25,23 +26,23 @@ class CachedImage extends StatelessWidget {
           ),
         ),
       ),
-      placeholder: (context, url) => Container(
+      placeholder: (BuildContext context, String url) => Container(
         width: width,
         height: height,
         decoration: BoxDecoration(
-            gradient: LinearGradient(
+            gradient: const LinearGradient(
                 colors: <Color>[Colors.white, TColor.background],
                 begin: Alignment.topLeft,
                 end: Alignment.bottomRight,
-                stops: [0.0, 1.0]),
+                stops: <double>[0.0, 1.0]),
             borderRadius: BorderRadius.circular(5.0)),
       ),
-      errorWidget: (context, url, error) => Container(
+      errorWidget: (BuildContext context, String url, _) => Container(
         width: width,
         height: height,
         decoration: BoxDecoration(
             color: Colors.grey, borderRadius: BorderRadius.circular(5.0)),
-        child: Center(child: Icon(Icons.error)),
+        child: const Center(child: Icon(Icons.error)),
       ),
     );
   }

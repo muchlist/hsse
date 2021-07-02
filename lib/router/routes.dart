@@ -10,6 +10,8 @@ import 'package:hsse/screen/violation/history_screen.dart';
 import 'package:hsse/screen/violation/detail_viol_screen.dart';
 
 class RouteGenerator {
+  RouteGenerator._();
+
   static const String homeHsse = '/home';
   static const String login = '/login';
   static const String detail = '/detail';
@@ -20,35 +22,41 @@ class RouteGenerator {
   static const String addRules = '/add-rules';
   static const String editRules = '/edit-rules';
 
-  RouteGenerator._();
-
   static Route<dynamic> generateRoute(RouteSettings settings) {
     switch (settings.name) {
       case login:
-        return MaterialPageRoute(builder: (_) => LoginScreen());
+        return MaterialPageRoute<LoginScreen>(builder: (_) => LoginScreen());
       case homeHsse:
-        return MaterialPageRoute(builder: (_) => HomeHsseScreen());
+        return MaterialPageRoute<HomeHsseScreen>(
+            builder: (_) => const HomeHsseScreen());
       case history:
-        return MaterialPageRoute(builder: (_) => HistoryScreen());
+        return MaterialPageRoute<HistoryScreen>(
+            builder: (_) => const HistoryScreen());
       case detail:
-        return MaterialPageRoute(builder: (_) => ViolDetailScreen());
+        return MaterialPageRoute<ViolDetailScreen>(
+            builder: (_) => const ViolDetailScreen());
       case addViol:
-        return MaterialPageRoute(builder: (_) => AddViolScreen());
+        return MaterialPageRoute<AddViolScreen>(
+            builder: (_) => AddViolScreen());
       case editViol:
-        return MaterialPageRoute(builder: (_) => EditViolScreen());
+        return MaterialPageRoute<EditViolScreen>(
+            builder: (_) => EditViolScreen());
       case rules:
-        return MaterialPageRoute(builder: (_) => RulesScreen());
+        return MaterialPageRoute<RulesScreen>(
+            builder: (_) => const RulesScreen());
       case addRules:
-        return MaterialPageRoute(builder: (_) => AddRulesScreen());
+        return MaterialPageRoute<AddRulesScreen>(
+            builder: (_) => AddRulesScreen());
       case editRules:
-        return MaterialPageRoute(builder: (_) => EditRulesScreen());
+        return MaterialPageRoute<EditRulesScreen>(
+            builder: (_) => EditRulesScreen());
       default:
-        return MaterialPageRoute(builder: (_) => LoginScreen());
+        return MaterialPageRoute<LoginScreen>(builder: (_) => LoginScreen());
     }
   }
 }
 
 class RouteException implements Exception {
-  final String message;
   const RouteException(this.message);
+  final String message;
 }

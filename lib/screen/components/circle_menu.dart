@@ -1,11 +1,6 @@
 import 'package:flutter/material.dart';
 
 class CircleMenu extends StatelessWidget {
-  final IconData iconData;
-  final String text;
-  final GestureTapCallback tapTap;
-  final Color color;
-
   const CircleMenu({
     Key? key,
     required this.iconData,
@@ -14,22 +9,27 @@ class CircleMenu extends StatelessWidget {
     required this.color,
   }) : super(key: key);
 
+  final IconData iconData;
+  final String text;
+  final GestureTapCallback tapTap;
+  final Color color;
+
   @override
   Widget build(BuildContext context) {
     return Padding(
       padding: const EdgeInsets.all(8.0),
       child: Column(
-        children: [
+        children: <Widget>[
           Container(
             width: 70,
             height: 70,
-            padding: EdgeInsets.all(8),
+            padding: const EdgeInsets.all(8),
+            decoration: BoxDecoration(shape: BoxShape.circle, color: color),
             child: Icon(
               iconData,
               size: 50,
               color: Colors.white,
             ),
-            decoration: BoxDecoration(shape: BoxShape.circle, color: color),
           ),
           Text(
             text,
