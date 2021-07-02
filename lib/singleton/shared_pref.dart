@@ -1,22 +1,22 @@
 import 'package:shared_preferences/shared_preferences.dart';
 
 class SharedPrefs {
-  static final SharedPrefs _singleton = SharedPrefs._internal();
   factory SharedPrefs() {
     return _singleton;
   }
   SharedPrefs._internal();
+  static final SharedPrefs _singleton = SharedPrefs._internal();
 
   late SharedPreferences localStorage;
-  Future init() async {
+  Future<void> init() async {
     localStorage = await SharedPreferences.getInstance();
   }
 
-  final _tokenSaved = "token";
-  final _branchSaved = "branch";
-  final _rolesSaved = "roles";
-  final _nameSaved = "name";
-  final _fireTokenSaved = "firebaseToken";
+  final String _tokenSaved = "token";
+  final String _branchSaved = "branch";
+  final String _rolesSaved = "roles";
+  final String _nameSaved = "name";
+  final String _fireTokenSaved = "firebaseToken";
 
   String? getToken() {
     return localStorage.getString(_tokenSaved);
@@ -52,16 +52,16 @@ class SharedPrefs {
   }
 
   List<String> getRoles() {
-    final rolesString = localStorage.getString(_rolesSaved);
+    final String? rolesString = localStorage.getString(_rolesSaved);
     if (rolesString != null && rolesString.isNotEmpty) {
       return rolesString.split(",");
     }
-    return [];
+    return <String>[];
   }
 
   Future<bool> setRoles(List<String> value) {
-    var rolesString = "";
-    if (value.length != 0) {
+    String rolesString = "";
+    if (value.isNotEmpty) {
       rolesString = value.join(",");
     }
     return localStorage.setString(_rolesSaved, rolesString);

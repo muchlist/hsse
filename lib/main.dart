@@ -14,11 +14,12 @@ import 'package:provider/provider.dart';
 
 import 'package:hsse/config/theme_color.dart';
 import 'package:hsse/router/routes.dart';
+import 'package:provider/single_child_widget.dart';
 
 import 'api/services/truck_service.dart';
 import 'api/services/viol_service.dart';
 
-void main() async {
+Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
   // init SharedPrefs
@@ -26,12 +27,12 @@ void main() async {
 
   // add font licensi
   LicenseRegistry.addLicense(() async* {
-    final license = await rootBundle.loadString('google_fonts/OFL.txt');
-    yield LicenseEntryWithLineBreaks(['google_fonts'], license);
+    final String license = await rootBundle.loadString('google_fonts/OFL.txt');
+    yield LicenseEntryWithLineBreaks(<String>['google_fonts'], license);
   });
 
   // Set notification bar tot transfarent
-  SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
+  SystemChrome.setSystemUIOverlayStyle(const SystemUiOverlayStyle(
     statusBarIconBrightness: Brightness.light,
     statusBarColor: Colors.transparent,
   ));
@@ -41,22 +42,24 @@ void main() async {
 
 class MyApp extends StatelessWidget {
   static const String _title = 'HSSE';
-  final AuthService _authService = AuthService();
-  final ViolService _violService = ViolService();
-  final RulesService _rulesService = RulesService();
-  final TruckService _truckService = TruckService();
+  final AuthService _authService = const AuthService();
+  final ViolService _violService = const ViolService();
+  final RulesService _rulesService = const RulesService();
+  final TruckService _truckService = const TruckService();
   // final TruckService _truckService = TruckService();
 
   @override
   Widget build(BuildContext context) {
     return MultiProvider(
-      providers: [
-        ChangeNotifierProvider(create: (context) => ViolProvider(_violService)),
-        ChangeNotifierProvider(create: (context) => AuthProvider(_authService)),
-        ChangeNotifierProvider(
-            create: (context) => RulesProvider(_rulesService)),
-        ChangeNotifierProvider(
-            create: (context) => TruckProvider(_truckService)),
+      providers: <SingleChildWidget>[
+        ChangeNotifierProvider<ViolProvider>(
+            create: (BuildContext context) => ViolProvider(_violService)),
+        ChangeNotifierProvider<AuthProvider>(
+            create: (BuildContext context) => AuthProvider(_authService)),
+        ChangeNotifierProvider<RulesProvider>(
+            create: (BuildContext context) => RulesProvider(_rulesService)),
+        ChangeNotifierProvider<TruckProvider>(
+            create: (BuildContext context) => TruckProvider(_truckService)),
       ],
       child: MaterialApp(
         title: _title,

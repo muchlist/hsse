@@ -42,8 +42,11 @@ class TruckSearchDelegate extends SearchDelegate<String?> {
       );
     }
 
-    Future.delayed(Duration.zero, () {
-      context.read<TruckProvider>().searchTruck(query).onError((error, _) {
+    Future<void>.delayed(Duration.zero, () {
+      context
+          .read<TruckProvider>()
+          .searchTruck(query)
+          .onError((Object? error, _) {
         if (error != null) {
           showToastError(context: context, message: error.toString());
         }
@@ -51,8 +54,8 @@ class TruckSearchDelegate extends SearchDelegate<String?> {
     });
 
     return Consumer<TruckProvider>(
-      builder: (_, data, __) {
-        return (data.truckSearchList.length == 0)
+      builder: (_, TruckProvider data, __) {
+        return (data.truckSearchList.isEmpty)
             ? Center(
                 child: Text(
                   "$query tidak ditemukan...",
@@ -62,7 +65,7 @@ class TruckSearchDelegate extends SearchDelegate<String?> {
                 padding: const EdgeInsets.symmetric(horizontal: 16),
                 child: ListView.builder(
                     itemCount: data.truckSearchList.length,
-                    itemBuilder: (context, index) {
+                    itemBuilder: (BuildContext context, int index) {
                       return GestureDetector(
                           onTap: () => close(
                               context, data.truckSearchList[index].noIdentity),
@@ -91,8 +94,11 @@ class TruckSearchDelegate extends SearchDelegate<String?> {
       );
     }
 
-    Future.delayed(Duration.zero, () {
-      context.read<TruckProvider>().searchTruck(query).onError((error, _) {
+    Future<void>.delayed(Duration.zero, () {
+      context
+          .read<TruckProvider>()
+          .searchTruck(query)
+          .onError((Object? error, _) {
         if (error != null) {
           showToastError(context: context, message: error.toString());
         }
@@ -100,8 +106,8 @@ class TruckSearchDelegate extends SearchDelegate<String?> {
     });
 
     return Consumer<TruckProvider>(
-      builder: (_, data, __) {
-        return (data.truckSearchList.length == 0)
+      builder: (_, TruckProvider data, __) {
+        return (data.truckSearchList.isEmpty)
             ? Center(
                 child: Text(
                   "$query tidak ditemukan...",
@@ -111,7 +117,7 @@ class TruckSearchDelegate extends SearchDelegate<String?> {
                 padding: const EdgeInsets.symmetric(horizontal: 16),
                 child: ListView.builder(
                     itemCount: data.truckSearchList.length,
-                    itemBuilder: (context, index) {
+                    itemBuilder: (BuildContext context, int index) {
                       return GestureDetector(
                           onTap: () => close(
                               context, data.truckSearchList[index].noIdentity),

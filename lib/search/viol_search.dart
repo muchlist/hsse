@@ -45,8 +45,11 @@ class ViolSearchDelegate extends SearchDelegate<String> {
       );
     }
 
-    Future.delayed(Duration.zero, () {
-      context.read<ViolProvider>().searchViol(query).onError((error, _) {
+    Future<void>.delayed(Duration.zero, () {
+      context
+          .read<ViolProvider>()
+          .searchViol(query)
+          .onError((Object? error, _) {
         if (error != null) {
           showToastError(context: context, message: error.toString());
         }
@@ -54,8 +57,8 @@ class ViolSearchDelegate extends SearchDelegate<String> {
     });
 
     return Consumer<ViolProvider>(
-      builder: (_, data, __) {
-        return (data.violListSearch.length == 0)
+      builder: (_, ViolProvider data, __) {
+        return (data.violListSearch.isEmpty)
             ? Center(
                 child: Text(
                   "$query tidak ditemukan...",
@@ -65,15 +68,18 @@ class ViolSearchDelegate extends SearchDelegate<String> {
                 padding: const EdgeInsets.symmetric(horizontal: 16),
                 child: StaggeredGridView.countBuilder(
                     crossAxisCount: (screenIsMobile(context)) ? 2 : 3,
-                    itemBuilder: (context, index) => GestureDetector(
-                        onTap: () {
-                          data
-                            ..removeDetail()
-                            ..violID = data.violListSearch[index].id;
-                          Navigator.pushNamed(context, RouteGenerator.detail);
-                        },
-                        child: ViolationTile(data: data.violListSearch[index])),
-                    staggeredTileBuilder: (_) => StaggeredTile.fit(1),
+                    itemBuilder: (BuildContext context, int index) =>
+                        GestureDetector(
+                            onTap: () {
+                              data
+                                ..removeDetail()
+                                ..violID = data.violListSearch[index].id;
+                              Navigator.pushNamed(
+                                  context, RouteGenerator.detail);
+                            },
+                            child: ViolationTile(
+                                data: data.violListSearch[index])),
+                    staggeredTileBuilder: (_) => const StaggeredTile.fit(1),
                     itemCount: data.violListSearch.length),
               );
       },
@@ -95,8 +101,11 @@ class ViolSearchDelegate extends SearchDelegate<String> {
       );
     }
 
-    Future.delayed(Duration.zero, () {
-      context.read<ViolProvider>().searchViol(query).onError((error, _) {
+    Future<void>.delayed(Duration.zero, () {
+      context
+          .read<ViolProvider>()
+          .searchViol(query)
+          .onError((Object? error, _) {
         if (error != null) {
           showToastError(context: context, message: error.toString());
         }
@@ -104,8 +113,8 @@ class ViolSearchDelegate extends SearchDelegate<String> {
     });
 
     return Consumer<ViolProvider>(
-      builder: (_, data, __) {
-        return (data.violListSearch.length == 0)
+      builder: (_, ViolProvider data, __) {
+        return (data.violListSearch.isEmpty)
             ? Center(
                 child: Text(
                   "$query tidak ditemukan...",
@@ -115,15 +124,18 @@ class ViolSearchDelegate extends SearchDelegate<String> {
                 padding: const EdgeInsets.symmetric(horizontal: 16),
                 child: StaggeredGridView.countBuilder(
                     crossAxisCount: (screenIsMobile(context)) ? 2 : 3,
-                    itemBuilder: (context, index) => GestureDetector(
-                        onTap: () {
-                          data
-                            ..removeDetail()
-                            ..violID = data.violListSearch[index].id;
-                          Navigator.pushNamed(context, RouteGenerator.detail);
-                        },
-                        child: ViolationTile(data: data.violListSearch[index])),
-                    staggeredTileBuilder: (_) => StaggeredTile.fit(1),
+                    itemBuilder: (BuildContext context, int index) =>
+                        GestureDetector(
+                            onTap: () {
+                              data
+                                ..removeDetail()
+                                ..violID = data.violListSearch[index].id;
+                              Navigator.pushNamed(
+                                  context, RouteGenerator.detail);
+                            },
+                            child: ViolationTile(
+                                data: data.violListSearch[index])),
+                    staggeredTileBuilder: (_) => const StaggeredTile.fit(1),
                     itemCount: data.violListSearch.length),
               );
       },
