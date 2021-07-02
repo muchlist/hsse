@@ -276,6 +276,12 @@ class _ViolDetailScreenBodyState extends State<ViolDetailScreenBody> {
                 : descText("${data.nViol} (perkiraan)"),
             verticalSpaceSmall,
             const Text(
+              "🛣  Lokasi",
+              style: TextStyle(fontWeight: FontWeight.bold),
+            ),
+            descText(data.location),
+            verticalSpaceSmall,
+            const Text(
               "⏲  Waktu kejadian",
               style: TextStyle(fontWeight: FontWeight.bold),
             ),

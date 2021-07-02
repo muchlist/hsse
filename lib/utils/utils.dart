@@ -36,6 +36,10 @@ extension DateMYString on DateTime {
     return DateFormat("MMM y").format(toLocal());
   }
 
+  String getFullTimeFormat() {
+    return DateFormat("d MMM y HH:mm").format(toLocal());
+  }
+
   int toInt() {
     return (millisecondsSinceEpoch ~/ 1000);
   }

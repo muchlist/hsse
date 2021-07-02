@@ -1,8 +1,8 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_datetime_picker/flutter_datetime_picker.dart';
 import 'package:hsse/api/json_models/requests/viol_edit_req.dart';
 import 'package:hsse/config/options.dart';
-import 'package:hsse/router/routes.dart';
 import 'package:hsse/screen/components/custom_button.dart';
 import 'package:hsse/screen/components/flushbar.dart';
 import 'package:hsse/screen/components/text_form.dart';
@@ -11,6 +11,7 @@ import 'package:hsse/search/truck_search.dart';
 import 'package:hsse/utils/enum_state.dart';
 import 'package:provider/provider.dart';
 import 'package:hsse/providers/viol.dart';
+import 'package:hsse/utils/utils.dart';
 
 class EditViolScreen extends StatelessWidget {
   @override
@@ -39,6 +40,27 @@ class _EditViolBodyState extends State<EditViolBody> {
   String? _selectedType;
 
   final detailController = TextEditingController();
+
+  DateTime? _dateSelected;
+
+  String getDateString() {
+    if (_dateSelected == null) {
+      return "Waktu pelanggaran";
+    }
+    return _dateSelected!.getFullTimeFormat();
+  }
+
+  void _showDateTimePicker() {
+    DatePicker.showDateTimePicker(context,
+        locale: LocaleType.id,
+        showTitleActions: true,
+        minTime: DateTime(DateTime.now().year - 10),
+        maxTime: DateTime(DateTime.now().year + 1), onConfirm: (date) {
+      setState(() {
+        _dateSelected = date;
+      });
+    }, currentTime: _dateSelected);
+  }
 
   void _editViol(int timestamp) {
     if (_key.currentState?.validate() ?? false) {
@@ -92,6 +114,7 @@ class _EditViolBodyState extends State<EditViolBody> {
       _selectedNoIdentity = detail.noIdentity;
       _selectedLocation = detail.location;
       _selectedType = detail.typeViolation;
+      _dateSelected = detail.timeViolation.toDate();
       detailController.text = detail.detailViolation;
     });
     super.initState();
@@ -241,6 +264,33 @@ class _EditViolBodyState extends State<EditViolBody> {
                 ),
 
                 verticalSpaceSmall,
+
+                // * Waktu pelanggaran text ------------------------
+                const Text(
+                  "Waktu Pelanggaran",
+                  style: TextStyle(fontSize: 16),
+                ),
+
+                GestureDetector(
+                  onTap: _showDateTimePicker,
+                  child: Container(
+                    height: 50,
+                    padding: EdgeInsets.symmetric(horizontal: 8),
+                    width: double.infinity,
+                    alignment: Alignment.centerLeft,
+                    decoration: BoxDecoration(color: Colors.white),
+                    child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Text(
+                            getDateString(),
+                          ),
+                          Icon(CupertinoIcons.calendar),
+                        ]),
+                  ),
+                ),
+
+                verticalSpaceMedium,
 
                 Consumer<ViolProvider>(builder: (_, data, __) {
                   return (data.state == ViewState.busy)

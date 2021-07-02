@@ -7,7 +7,7 @@ import 'package:hsse/screen/rule/rules_screen.dart';
 import 'package:hsse/screen/violation/add_viol_screen.dart';
 import 'package:hsse/screen/violation/edit_viol_screen.dart';
 import 'package:hsse/screen/violation/history_screen.dart';
-import 'package:hsse/screen/violation/viol_detail.dart';
+import 'package:hsse/screen/violation/detail_viol_screen.dart';
 
 class RouteGenerator {
   static const String homeHsse = '/home';
