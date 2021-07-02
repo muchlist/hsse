@@ -47,11 +47,7 @@ class ViolationTile extends StatelessWidget {
               ),
               Row(
                 children: [
-                  if (data.approvedAt != 0)
-                    const Icon(
-                      Icons.check_circle_outline,
-                      color: TColor.primary,
-                    ),
+                  getIcon(data.state),
                   const Spacer(),
                   Text(
                     data.timeViolation.getCompleteDateString(),
@@ -67,5 +63,25 @@ class ViolationTile extends StatelessWidget {
         ),
       ),
     );
+  }
+
+  Icon getIcon(int state) {
+    switch (state) {
+      case 0: //draft
+        return const Icon(
+          Icons.drive_file_rename_outline_outlined,
+          color: Colors.grey,
+        );
+      case 1: // ready
+        return const Icon(
+          Icons.send_and_archive_sharp,
+          color: Colors.grey,
+        );
+      default: // approved
+        return const Icon(
+          Icons.check_box,
+          color: TColor.primary,
+        );
+    }
   }
 }

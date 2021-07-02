@@ -53,6 +53,19 @@ class _ViolDetailScreenBodyState extends State<ViolDetailScreenBody> {
     });
   }
 
+  Future<void> _ready() {
+    return Future.delayed(Duration.zero, () {
+      _violProvider.sendConfirm()
+        ..then((_) {
+          showToastSuccess(
+              context: context,
+              message: "Dokumen berhasil dikirim, meminta persetujuan HSSE");
+        }).onError((error, _) {
+          showToastError(context: context, message: error.toString());
+        });
+    });
+  }
+
   Future<void> _approve() {
     return Future.delayed(Duration.zero, () {
       _violProvider.approve()
@@ -173,7 +186,7 @@ class _ViolDetailScreenBodyState extends State<ViolDetailScreenBody> {
                           if (!(detail.images.length == 0 && detail.state == 2))
                             buildPhotoList(detail),
                           verticalSpaceMedium,
-                          if (detail.state == 2)
+                          if (detail.state == 2) // approved
                             Center(
                               child: HomeLikeButton(
                                   iconData: Icons.download,
@@ -182,6 +195,16 @@ class _ViolDetailScreenBodyState extends State<ViolDetailScreenBody> {
                                     var url =
                                         "${ConstUrl.baseUrl}pdf/${detail.id}.pdf";
                                     _launchInBrowser(url);
+                                  }),
+                            ),
+                          if (detail.state == 0) //draft
+                            Center(
+                              child: HomeLikeButton(
+                                  iconData: Icons.edit,
+                                  text: "Edit ",
+                                  color: Colors.deepOrange.shade300,
+                                  tapTap: () {
+                                    // Navigator
                                   }),
                             ),
                           SizedBox(height: 150)
@@ -315,7 +338,7 @@ class _ViolDetailScreenBodyState extends State<ViolDetailScreenBody> {
 
   Widget buildBottomApproved(ViolData data) {
     return Container(
-      height: 50,
+      // height: 50,
       color: TColor.primary.withOpacity(0.9),
       child: Padding(
         padding: const EdgeInsets.all(8.0),
@@ -358,7 +381,7 @@ class _ViolDetailScreenBodyState extends State<ViolDetailScreenBody> {
 
   Widget buildBottomDraft() {
     return Container(
-      height: 50,
+      // height: 60,
       color: Colors.deepOrange.shade400.withOpacity(0.9),
       child: Padding(
         padding: const EdgeInsets.all(8.0),
@@ -371,10 +394,19 @@ class _ViolDetailScreenBodyState extends State<ViolDetailScreenBody> {
               color: Colors.white,
             ),
             horizontalSpaceRegular,
-            Text(
-              "DRAFT",
-              style: TextStyle(color: Colors.white),
-              maxLines: 2,
+            Expanded(
+              child: Text(
+                "DRAFT\nHarap lengkapi dokumen sebelum ke proses selanjutnya",
+                style: TextStyle(color: Colors.white, fontSize: 12),
+                overflow: TextOverflow.ellipsis,
+                maxLines: 3,
+              ),
+            ),
+            ConfirmButton(
+              iconData: Icons.send,
+              text: "Kirim ",
+              tapTap: _ready,
+              color: Colors.blue.shade400,
             ),
           ],
         ),

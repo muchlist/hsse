@@ -160,6 +160,31 @@ class ViolProvider extends ChangeNotifier {
     }
   }
 
+  // Send to confirm
+  Future<void> sendConfirm() async {
+    setDetailState(ViewState.busy);
+
+    var error = "";
+    try {
+      final response = await _violService.sendConfirmViol(_violIDSaved);
+      if (response.error != null) {
+        error = response.error!.message;
+      } else {
+        final violData = response.data!;
+        _violDetail = violData;
+      }
+    } catch (e) {
+      error = e.toString();
+    }
+
+    setDetailState(ViewState.idle);
+
+    if (error.isNotEmpty) {
+      return Future.error(error);
+    }
+    await findViol(loading: false);
+  }
+
   // Approve
   Future<void> approve() async {
     setDetailState(ViewState.busy);
