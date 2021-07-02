@@ -5,6 +5,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:hsse/api/filter_models/viol_filter.dart';
 import 'package:hsse/api/json_models/requests/viol_edit_req.dart';
 import 'package:hsse/api/json_models/requests/viol_req.dart';
+import 'package:hsse/api/json_models/responses/message_resp.dart';
 import 'package:hsse/api/json_models/responses/viol_list_resp.dart';
 import 'package:hsse/api/json_models/responses/viol_resp.dart';
 import 'package:hsse/api/services/viol_service.dart';
@@ -29,28 +30,27 @@ class ViolProvider extends ChangeNotifier {
   // viol list cache
   List<ViolMinData> _violList = <ViolMinData>[];
   List<ViolMinData> get violList {
-    return UnmodifiableListView(_violList);
+    return UnmodifiableListView<ViolMinData>(_violList);
   }
 
   // viol list with ready state cache
   List<ViolMinData> get violListReady {
-    return UnmodifiableListView(_violList.where((e) => e.state == 1));
+    return UnmodifiableListView<ViolMinData>(
+        _violList.where((e) => e.state == 1));
   }
 
   // viol list with approved state cache
   List<ViolMinData> get violListApproved {
-    var temp = _violList.where((e) => e.state == 2).toList();
+    final List<ViolMinData> temp =
+        _violList.where((ViolMinData e) => e.state == 2).toList();
     if (temp.length < 3) {
-      return UnmodifiableListView(temp);
+      return UnmodifiableListView<ViolMinData>(temp);
     }
-    return UnmodifiableListView(temp.sublist(0, 3));
+    return UnmodifiableListView<ViolMinData>(temp.sublist(0, 3));
   }
 
   // *memasang filter pada pencarian viol
-  FilterViol _filterViol = FilterViol(limit: 200);
-  void setFilter(FilterViol filter) {
-    _filterViol = filter;
-  }
+  FilterViol filterViol = FilterViol(limit: 200);
 
   // * Mendapatkan viol
   Future<void> findViol({bool loading = true}) async {
@@ -58,9 +58,9 @@ class ViolProvider extends ChangeNotifier {
       setState(ViewState.busy);
     }
 
-    var error = "";
+    String error = "";
     try {
-      final response = await _violService.findViol(_filterViol);
+      final ViolListResponse response = await _violService.findViol(filterViol);
       if (response.error != null) {
         error = response.error!.message;
       } else {
@@ -73,25 +73,25 @@ class ViolProvider extends ChangeNotifier {
     setState(ViewState.idle);
 
     if (error.isNotEmpty) {
-      return Future.error(error);
+      return Future<void>.error(error);
     }
   }
 
   // violsearch list cache
   List<ViolMinData> _violListSearch = <ViolMinData>[];
   List<ViolMinData> get violListSearch {
-    return UnmodifiableListView(_violListSearch);
+    return UnmodifiableListView<ViolMinData>(_violListSearch);
   }
 
   Future<void> searchViol(String noIdentity) async {
-    var filter = FilterViol(lambung: noIdentity.toUpperCase());
+    FilterViol filter = FilterViol(lambung: noIdentity.toUpperCase());
 
-    var error = "";
+    String error = "";
     try {
-      final response = await _violService.findViol(filter);
+      final ViolListResponse response = await _violService.findViol(filter);
       if (response.error != null) {
         error = response.error!.message;
-        _violListSearch = [];
+        _violListSearch = <ViolMinData>[];
       } else {
         _violListSearch = response.data;
       }
@@ -102,7 +102,7 @@ class ViolProvider extends ChangeNotifier {
     setState(ViewState.idle);
 
     if (error.isNotEmpty) {
-      return Future.error(error);
+      return Future<void>.error(error);
     }
   }
 
@@ -117,23 +117,18 @@ class ViolProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-  String _violIDSaved = "";
-  void setID(String violID) {
-    _violIDSaved = violID;
-  }
-
-  String getID() => _violIDSaved;
+  String violID = "";
 
   // viol detail cache
   ViolData _violDetail = ViolData("", 0, "", "", 0, "", "", 0, "", "", "", 0, 0,
-      "", "", "", "", "", "", 0, "", []);
+      "", "", "", "", "", "", 0, "", <String>[]);
   ViolData get violDetail {
     return _violDetail;
   }
 
   void removeDetail() {
     _violDetail = ViolData("", 0, "", "", 0, "", "", 0, "", "", "", 0, 0, "",
-        "", "", "", "", "", 0, "", []);
+        "", "", "", "", "", 0, "", <String>[]);
   }
 
   // get detail viol
@@ -141,13 +136,13 @@ class ViolProvider extends ChangeNotifier {
   Future<void> getDetail() async {
     setDetailState(ViewState.busy);
 
-    var error = "";
+    String error = "";
     try {
-      final response = await _violService.getViol(_violIDSaved);
+      final ViolDetailResponse response = await _violService.getViol(violID);
       if (response.error != null) {
         error = response.error!.message;
       } else {
-        final violData = response.data!;
+        final ViolData violData = response.data!;
         _violDetail = violData;
       }
     } catch (e) {
@@ -156,7 +151,7 @@ class ViolProvider extends ChangeNotifier {
 
     setDetailState(ViewState.idle);
     if (error.isNotEmpty) {
-      return Future.error(error);
+      return Future<void>.error(error);
     }
   }
 
@@ -164,13 +159,14 @@ class ViolProvider extends ChangeNotifier {
   Future<void> sendConfirm() async {
     setDetailState(ViewState.busy);
 
-    var error = "";
+    String error = "";
     try {
-      final response = await _violService.sendConfirmViol(_violIDSaved);
+      final ViolDetailResponse response =
+          await _violService.sendConfirmViol(violID);
       if (response.error != null) {
         error = response.error!.message;
       } else {
-        final violData = response.data!;
+        final ViolData violData = response.data!;
         _violDetail = violData;
       }
     } catch (e) {
@@ -180,7 +176,7 @@ class ViolProvider extends ChangeNotifier {
     setDetailState(ViewState.idle);
 
     if (error.isNotEmpty) {
-      return Future.error(error);
+      return Future<void>.error(error);
     }
     await findViol(loading: false);
   }
@@ -189,13 +185,14 @@ class ViolProvider extends ChangeNotifier {
   Future<void> approve() async {
     setDetailState(ViewState.busy);
 
-    var error = "";
+    String error = "";
     try {
-      final response = await _violService.approveViol(_violIDSaved);
+      final ViolDetailResponse response =
+          await _violService.approveViol(violID);
       if (response.error != null) {
         error = response.error!.message;
       } else {
-        final violData = response.data!;
+        final ViolData violData = response.data!;
         _violDetail = violData;
       }
     } catch (e) {
@@ -205,7 +202,7 @@ class ViolProvider extends ChangeNotifier {
     setDetailState(ViewState.idle);
 
     if (error.isNotEmpty) {
-      return Future.error(error);
+      return Future<void>.error(error);
     }
     await findViol(loading: false);
   }
@@ -214,13 +211,14 @@ class ViolProvider extends ChangeNotifier {
   Future<void> reject() async {
     setDetailState(ViewState.busy);
 
-    var error = "";
+    String error = "";
     try {
-      final response = await _violService.sendDraftViol(_violIDSaved);
+      final ViolDetailResponse response =
+          await _violService.sendDraftViol(violID);
       if (response.error != null) {
         error = response.error!.message;
       } else {
-        final violData = response.data!;
+        final ViolData violData = response.data!;
         _violDetail = violData;
       }
     } catch (e) {
@@ -229,7 +227,7 @@ class ViolProvider extends ChangeNotifier {
 
     setDetailState(ViewState.idle);
     if (error.isNotEmpty) {
-      return Future.error(error);
+      return Future<void>.error(error);
     }
     await findViol(loading: false);
   }
@@ -239,17 +237,17 @@ class ViolProvider extends ChangeNotifier {
   // meremove detail yang ada dan setID ke id hasil return
   Future<bool> addViol(ViolRequest payload) async {
     setState(ViewState.busy);
-    var error = "";
+    String error = "";
 
     try {
-      final response = await _violService.createViol(payload);
+      final MessageResponse response = await _violService.createViol(payload);
       if (response.error != null) {
         error = response.error!.message;
       } else {
         // response.data = "menambahkan data berhasil, ID : asdjasodasiodj"
-        final objectID = response.data?.split(" ");
+        final List<String>? objectID = response.data?.split(" ");
         removeDetail();
-        setID(objectID?.last ?? "");
+        violID = objectID?.last ?? "";
       }
     } catch (e) {
       error = e.toString();
@@ -257,7 +255,7 @@ class ViolProvider extends ChangeNotifier {
 
     setState(ViewState.idle);
     if (error.isNotEmpty) {
-      return Future.error(error);
+      return Future<bool>.error(error);
     }
     await findViol(loading: false);
     return true;
@@ -284,10 +282,11 @@ class ViolProvider extends ChangeNotifier {
   // return future ViolDetail jika edit viol berhasil
   Future<bool> editViol(ViolEditRequest payload) async {
     setState(ViewState.busy);
-    var error = "";
+    String error = "";
 
     try {
-      final response = await _violService.editViol(_violIDSaved, payload);
+      final ViolDetailResponse response =
+          await _violService.editViol(violID, payload);
       if (response.error != null) {
         error = response.error!.message;
       } else {
@@ -299,7 +298,7 @@ class ViolProvider extends ChangeNotifier {
 
     setState(ViewState.idle);
     if (error.isNotEmpty) {
-      return Future.error(error);
+      return Future<bool>.error(error);
     }
 
     await findViol(loading: false);
@@ -311,7 +310,7 @@ class ViolProvider extends ChangeNotifier {
   Future<bool> uploadImage(File file) async {
     setDetailState(ViewState.busy);
 
-    var error = "";
+    String error = "";
 
     late File fileCompressed;
     try {
@@ -321,8 +320,8 @@ class ViolProvider extends ChangeNotifier {
     }
 
     try {
-      final response =
-          await _violService.uploadImage(_violIDSaved, fileCompressed);
+      final ViolDetailResponse response =
+          await _violService.uploadImage(violID, fileCompressed);
       if (response.error != null) {
         error = response.error!.message;
       } else {
@@ -334,7 +333,7 @@ class ViolProvider extends ChangeNotifier {
 
     setDetailState(ViewState.idle);
     if (error.isNotEmpty) {
-      return Future.error(error);
+      return Future<bool>.error(error);
     }
     await findViol(loading: false);
     return true;
@@ -345,17 +344,16 @@ class ViolProvider extends ChangeNotifier {
     // imageName from list server bentuknya seperti ini
     // image/violation/namaImage.jpg sedangkan hanya diperlukan namaImage.jpg nya saja sebagai input
     // maka modifikasi dulu stringnya
-    var imageNameMod = imageName.replaceFirst("image/violation/", "");
+    final String imageNameMod = imageName.replaceFirst("image/violation/", "");
 
     setDetailState(ViewState.busy);
-    var error = "";
+    String error = "";
     try {
-      final response =
-          await _violService.deleteImageViol(_violIDSaved, imageNameMod);
+      final response = await _violService.deleteImageViol(violID, imageNameMod);
       if (response.error != null) {
         error = response.error!.message;
       } else {
-        final violData = response.data!;
+        final ViolData violData = response.data!;
         _violDetail = violData;
       }
     } catch (e) {
@@ -364,17 +362,17 @@ class ViolProvider extends ChangeNotifier {
 
     setDetailState(ViewState.idle);
     if (error.isNotEmpty) {
-      return Future.error(error);
+      return Future<void>.error(error);
     }
     await findViol(loading: false);
   }
 
   // remove viol
   Future<bool> removeViol() async {
-    var error = "";
+    String error = "";
 
     try {
-      final response = await _violService.deleteViol(_violIDSaved);
+      final MessageResponse response = await _violService.deleteViol(violID);
       if (response.error != null) {
         error = response.error!.message;
       }
@@ -384,7 +382,7 @@ class ViolProvider extends ChangeNotifier {
 
     notifyListeners();
     if (error.isNotEmpty) {
-      return Future.error(error);
+      return Future<bool>.error(error);
     }
     await findViol(loading: false);
     return true;
@@ -402,6 +400,6 @@ class ViolProvider extends ChangeNotifier {
   // di on dispose
   void onClose() {
     removeDetail();
-    _violList = [];
+    _violList = <ViolMinData>[];
   }
 }

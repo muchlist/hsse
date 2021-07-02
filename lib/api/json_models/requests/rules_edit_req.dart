@@ -10,15 +10,15 @@ class RulesEditRequest {
       required this.blockTime,
       required this.description});
 
+  factory RulesEditRequest.fromJson(Map<String, dynamic> json) =>
+      _$RulesEditRequestFromJson(json);
+
+  Map<String, dynamic> toJson() => _$RulesEditRequestToJson(this);
+
   @JsonKey(name: "filter_timestamp")
   final int filterTimestamp;
   final int score;
   @JsonKey(name: "block_time")
   final int blockTime;
   final String description;
-
-  factory RulesEditRequest.fromJson(Map<String, dynamic> json) =>
-      _$RulesEditRequestFromJson(json);
-
-  Map<String, dynamic> toJson() => _$RulesEditRequestToJson(this);
 }

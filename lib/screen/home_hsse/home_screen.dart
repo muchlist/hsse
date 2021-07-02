@@ -154,7 +154,7 @@ class _HomeHsseBodyState extends State<HomeHsseBody> {
           onTap: () {
             data
               ..removeDetail()
-              ..setID(data.violListReady[index].id);
+              ..violID = data.violListReady[index].id;
             Navigator.pushNamed(context, RouteGenerator.detail);
           },
           child: ViolationTile(data: data.violListReady[index])),
@@ -170,7 +170,7 @@ class _HomeHsseBodyState extends State<HomeHsseBody> {
           onTap: () {
             data
               ..removeDetail()
-              ..setID(data.violListApproved[index].id);
+              ..violID = data.violListApproved[index].id;
             Navigator.pushNamed(context, RouteGenerator.detail);
           },
           child: ViolationTile(data: data.violListApproved[index])),

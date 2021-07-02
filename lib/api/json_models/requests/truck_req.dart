@@ -13,6 +13,11 @@ class TruckRequest {
     required this.email,
   });
 
+  factory TruckRequest.fromJson(Map<String, dynamic> json) =>
+      _$TruckRequestFromJson(json);
+
+  Map<String, dynamic> toJson() => _$TruckRequestToJson(this);
+
   @JsonKey(name: "no_identity")
   final String noIdentity;
   @JsonKey(name: "no_pol")
@@ -21,9 +26,4 @@ class TruckRequest {
   final String owner;
   final String hp;
   final String email;
-
-  factory TruckRequest.fromJson(Map<String, dynamic> json) =>
-      _$TruckRequestFromJson(json);
-
-  Map<String, dynamic> toJson() => _$TruckRequestToJson(this);
 }

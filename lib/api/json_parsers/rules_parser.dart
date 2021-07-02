@@ -12,10 +12,13 @@ class RulesParser extends JsonParser<RulesDetailResponse>
   @override
   Future<RulesDetailResponse> parseFromJson(String json) async {
     try {
-      final decoded = decodeJsonObject(json);
+      final Map<String, dynamic> decoded = decodeJsonObject(json);
       return RulesDetailResponse.fromJson(decoded);
     } catch (e) {
-      return RulesDetailResponse(ErrorResp(0, e.toString(), "", []), null);
+      return RulesDetailResponse(
+        ErrorResp(0, e.toString(), "", <String>[]),
+        null,
+      );
     }
   }
 }
@@ -27,10 +30,13 @@ class RulesListParser extends JsonParser<RulesListResponse>
   @override
   Future<RulesListResponse> parseFromJson(String json) async {
     try {
-      final decoded = decodeJsonObject(json);
+      final Map<String, dynamic> decoded = decodeJsonObject(json);
       return RulesListResponse.fromJson(decoded);
     } catch (e) {
-      return RulesListResponse(ErrorResp(0, e.toString(), "", []), []);
+      return RulesListResponse(
+        ErrorResp(0, e.toString(), "", <String>[]),
+        <RulesMinData>[],
+      );
     }
   }
 }

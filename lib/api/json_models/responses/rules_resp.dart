@@ -6,21 +6,25 @@ part 'rules_resp.g.dart';
 
 @JsonSerializable(explicitToJson: true)
 class RulesDetailResponse {
-  final ErrorResp? error;
-  final RulesData? data;
-
   RulesDetailResponse(this.error, this.data);
 
   factory RulesDetailResponse.fromJson(Map<String, dynamic> json) =>
       _$RulesDetailResponseFromJson(json);
 
   Map<String, dynamic> toJson() => _$RulesDetailResponseToJson(this);
+  final ErrorResp? error;
+  final RulesData? data;
 }
 
 @JsonSerializable(explicitToJson: true)
 class RulesData {
   RulesData(this.id, this.updatedAt, this.updatedBy, this.updatedById,
       this.branch, this.score, this.blockTime, this.description);
+
+  factory RulesData.fromJson(Map<String, dynamic> json) =>
+      _$RulesDataFromJson(json);
+
+  Map<String, dynamic> toJson() => _$RulesDataToJson(this);
 
   final String id;
   @JsonKey(name: "updated_at")
@@ -34,9 +38,4 @@ class RulesData {
   @JsonKey(name: "block_time")
   final int blockTime;
   final String description;
-
-  factory RulesData.fromJson(Map<String, dynamic> json) =>
-      _$RulesDataFromJson(json);
-
-  Map<String, dynamic> toJson() => _$RulesDataToJson(this);
 }

@@ -35,7 +35,7 @@ class ViolService {
   }
 
   Future<ViolListResponse> findViol(FilterViol f) {
-    var query = "";
+    String query = "";
 
     if (f.lambung != null) {
       query = query + "lambung=${f.lambung}&";
@@ -54,22 +54,22 @@ class ViolService {
     }
 
     return RequestREST(endpoint: "/violation?$query")
-        .executeGet<ViolListResponse>(ViolListParser());
+        .executeGet<ViolListResponse>(const ViolListParser());
   }
 
   Future<ViolDetailResponse> sendDraftViol(String id) {
     return RequestREST(endpoint: "/violation-draft/$id")
-        .executeGet<ViolDetailResponse>(ViolParser());
+        .executeGet<ViolDetailResponse>(const ViolParser());
   }
 
   Future<ViolDetailResponse> sendConfirmViol(String id) {
     return RequestREST(endpoint: "/violation-confirm/$id")
-        .executeGet<ViolDetailResponse>(ViolParser());
+        .executeGet<ViolDetailResponse>(const ViolParser());
   }
 
   Future<ViolDetailResponse> approveViol(String id) {
     return RequestREST(endpoint: "/violation-approve/$id")
-        .executeGet<ViolDetailResponse>(ViolParser());
+        .executeGet<ViolDetailResponse>(const ViolParser());
   }
 
   Future<ViolDetailResponse> uploadImage(String id, File file) async {
@@ -77,12 +77,12 @@ class ViolService {
         endpoint: "/violation-upload-image/$id",
         data: <String, dynamic>{
           "image": await MultipartFile.fromFile(file.path)
-        }).executeUpload(ViolParser());
+        }).executeUpload(const ViolParser());
   }
 
   // params : imageName with extension
   Future<ViolDetailResponse> deleteImageViol(String id, String imageName) {
     return RequestREST(endpoint: "/violation-delete-image/$id/$imageName")
-        .executeGet<ViolDetailResponse>(ViolParser());
+        .executeGet<ViolDetailResponse>(const ViolParser());
   }
 }

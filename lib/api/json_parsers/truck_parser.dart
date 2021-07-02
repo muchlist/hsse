@@ -12,10 +12,13 @@ class TruckParser extends JsonParser<TruckDetailResponse>
   @override
   Future<TruckDetailResponse> parseFromJson(String json) async {
     try {
-      final decoded = decodeJsonObject(json);
+      final Map<String, dynamic> decoded = decodeJsonObject(json);
       return TruckDetailResponse.fromJson(decoded);
     } catch (e) {
-      return TruckDetailResponse(ErrorResp(0, e.toString(), "", []), null);
+      return TruckDetailResponse(
+        ErrorResp(0, e.toString(), "", <String>[]),
+        null,
+      );
     }
   }
 }
@@ -27,10 +30,13 @@ class TruckListParser extends JsonParser<TruckListResponse>
   @override
   Future<TruckListResponse> parseFromJson(String json) async {
     try {
-      final decoded = decodeJsonObject(json);
+      final Map<String, dynamic> decoded = decodeJsonObject(json);
       return TruckListResponse.fromJson(decoded);
     } catch (e) {
-      return TruckListResponse(ErrorResp(0, e.toString(), "", []), []);
+      return TruckListResponse(
+        ErrorResp(0, e.toString(), "", <String>[]),
+        <TruckMinData>[],
+      );
     }
   }
 }

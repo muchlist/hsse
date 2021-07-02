@@ -34,7 +34,7 @@ class HistoryScreen extends StatelessWidget {
               if (searchResult != null && searchResult != "") {
                 context.read<ViolProvider>()
                   ..removeDetail()
-                  ..setID(searchResult);
+                  ..violID = searchResult;
                 await Navigator.pushNamed(context, RouteGenerator.detail);
               }
             },
@@ -85,7 +85,7 @@ class HistoryBody extends StatelessWidget {
                 onTap: () {
                   data
                     ..removeDetail()
-                    ..setID(data.violList[index].id);
+                    ..violID = data.violList[index].id;
                   Navigator.pushNamed(context, RouteGenerator.detail);
                 },
                 child: ViolationTile(data: data.violList[index])),

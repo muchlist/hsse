@@ -69,7 +69,7 @@ class ViolSearchDelegate extends SearchDelegate<String> {
                         onTap: () {
                           data
                             ..removeDetail()
-                            ..setID(data.violListSearch[index].id);
+                            ..violID = data.violListSearch[index].id;
                           Navigator.pushNamed(context, RouteGenerator.detail);
                         },
                         child: ViolationTile(data: data.violListSearch[index])),
@@ -119,7 +119,7 @@ class ViolSearchDelegate extends SearchDelegate<String> {
                         onTap: () {
                           data
                             ..removeDetail()
-                            ..setID(data.violListSearch[index].id);
+                            ..violID = data.violListSearch[index].id;
                           Navigator.pushNamed(context, RouteGenerator.detail);
                         },
                         child: ViolationTile(data: data.violListSearch[index])),

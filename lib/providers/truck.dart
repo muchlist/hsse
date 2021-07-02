@@ -4,6 +4,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:hsse/api/filter_models/truck_filter.dart';
 import 'package:hsse/api/json_models/requests/truck_edit_req.dart';
 import 'package:hsse/api/json_models/requests/truck_req.dart';
+import 'package:hsse/api/json_models/responses/message_resp.dart';
 import 'package:hsse/api/json_models/responses/truck_list_resp.dart';
 import 'package:hsse/api/json_models/responses/truck_resp.dart';
 import 'package:hsse/api/services/truck_service.dart';
@@ -11,8 +12,8 @@ import 'package:hsse/singleton/shared_pref.dart';
 import 'package:hsse/utils/enum_state.dart';
 
 class TruckProvider extends ChangeNotifier {
-  final TruckService _truckService;
   TruckProvider(this._truckService);
+  final TruckService _truckService;
 
   // =======================================================
   // List Truck
@@ -26,16 +27,13 @@ class TruckProvider extends ChangeNotifier {
   }
 
   // truck list cache
-  List<TruckMinData> _truckList = [];
+  List<TruckMinData> _truckList = <TruckMinData>[];
   List<TruckMinData> get truckList {
-    return UnmodifiableListView(_truckList);
+    return UnmodifiableListView<TruckMinData>(_truckList);
   }
 
   // *memasang filter pada pencarian truck
-  FilterTruck _filterTruck = FilterTruck(branch: SharedPrefs().getBranch());
-  void setFilter(FilterTruck filter) {
-    _filterTruck = filter;
-  }
+  FilterTruck filterTruck = FilterTruck(branch: SharedPrefs().getBranch());
 
   // * Mendapatkan truck
   Future<void> findTruck({bool loading = true}) async {
@@ -43,9 +41,10 @@ class TruckProvider extends ChangeNotifier {
       setState(ViewState.busy);
     }
 
-    var error = "";
+    String error = "";
     try {
-      final response = await _truckService.findTruck(_filterTruck);
+      final TruckListResponse response =
+          await _truckService.findTruck(filterTruck);
       if (response.error != null) {
         error = response.error!.message;
       } else {
@@ -58,26 +57,26 @@ class TruckProvider extends ChangeNotifier {
     setState(ViewState.idle);
 
     if (error.isNotEmpty) {
-      return Future.error(error);
+      return Future<void>.error(error);
     }
   }
 
 // ========================================================
   // search truck
   // truck search list cache
-  List<TruckMinData> _truckSearchList = [];
+  List<TruckMinData> _truckSearchList = <TruckMinData>[];
   List<TruckMinData> get truckSearchList {
-    return UnmodifiableListView(_truckSearchList);
+    return UnmodifiableListView<TruckMinData>(_truckSearchList);
   }
 
   // * Mendapatkan truck
   Future<void> searchTruck(String noIdentity) async {
-    final filter = FilterTruck(
+    final FilterTruck filter = FilterTruck(
         branch: SharedPrefs().getBranch(), identity: noIdentity.toUpperCase());
 
-    var error = "";
+    String error = "";
     try {
-      final response = await _truckService.findTruck(filter);
+      final TruckListResponse response = await _truckService.findTruck(filter);
       if (response.error != null) {
         error = response.error!.message;
       } else {
@@ -90,7 +89,7 @@ class TruckProvider extends ChangeNotifier {
     setState(ViewState.idle);
 
     if (error.isNotEmpty) {
-      return Future.error(error);
+      return Future<void>.error(error);
     }
   }
 
@@ -105,12 +104,7 @@ class TruckProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-  String _truckIDSaved = "";
-  void setTruckID(String truckID) {
-    _truckIDSaved = truckID;
-  }
-
-  String getTruckId() => _truckIDSaved;
+  String truckID = "";
 
   // truck detail cache
   TruckData _truckDetail = TruckData("", 0, "", "", 0, "", "", "", "", "", "",
@@ -129,13 +123,14 @@ class TruckProvider extends ChangeNotifier {
   Future<void> getDetail() async {
     setDetailState(ViewState.busy);
 
-    var error = "";
+    String error = "";
     try {
-      final response = await _truckService.getTruck(_truckIDSaved);
+      final TruckDetailResponse response =
+          await _truckService.getTruck(truckID);
       if (response.error != null) {
         error = response.error!.message;
       } else {
-        final truckData = response.data!;
+        final TruckData truckData = response.data!;
         _truckDetail = truckData;
       }
     } catch (e) {
@@ -144,7 +139,7 @@ class TruckProvider extends ChangeNotifier {
 
     setDetailState(ViewState.idle);
     if (error.isNotEmpty) {
-      return Future.error(error);
+      return Future<void>.error(error);
     }
   }
 
@@ -152,10 +147,10 @@ class TruckProvider extends ChangeNotifier {
   // memanggil findTruck sehingga tidak perlu notifyListener
   Future<bool> addTruck(TruckRequest payload) async {
     setState(ViewState.busy);
-    var error = "";
+    String error = "";
 
     try {
-      final response = await _truckService.createTruck(payload);
+      final MessageResponse response = await _truckService.createTruck(payload);
       if (response.error != null) {
         error = response.error!.message;
       }
@@ -165,7 +160,7 @@ class TruckProvider extends ChangeNotifier {
 
     setState(ViewState.idle);
     if (error.isNotEmpty) {
-      return Future.error(error);
+      return Future<bool>.error(error);
     }
     await findTruck(loading: false);
     return true;
@@ -192,10 +187,11 @@ class TruckProvider extends ChangeNotifier {
   // return future TruckDetail jika edit truck berhasil
   Future<bool> editTruck(TruckEditRequest payload) async {
     setState(ViewState.busy);
-    var error = "";
+    String error = "";
 
     try {
-      final response = await _truckService.editTruck(_truckIDSaved, payload);
+      final TruckDetailResponse response =
+          await _truckService.editTruck(truckID, payload);
       if (response.error != null) {
         error = response.error!.message;
       } else {
@@ -207,7 +203,7 @@ class TruckProvider extends ChangeNotifier {
 
     setState(ViewState.idle);
     if (error.isNotEmpty) {
-      return Future.error(error);
+      return Future<bool>.error(error);
     }
 
     await findTruck(loading: false);
@@ -216,10 +212,10 @@ class TruckProvider extends ChangeNotifier {
 
   // remove truck
   Future<bool> removeTruck() async {
-    var error = "";
+    String error = "";
 
     try {
-      final response = await _truckService.deleteTruck(_truckIDSaved);
+      final MessageResponse response = await _truckService.deleteTruck(truckID);
       if (response.error != null) {
         error = response.error!.message;
       }
@@ -229,7 +225,7 @@ class TruckProvider extends ChangeNotifier {
 
     notifyListeners();
     if (error.isNotEmpty) {
-      return Future.error(error);
+      return Future<bool>.error(error);
     }
     await findTruck(loading: false);
     return true;
@@ -247,6 +243,6 @@ class TruckProvider extends ChangeNotifier {
   // di on dispose
   void onClose() {
     removeDetail();
-    _truckList = [];
+    _truckList = <TruckMinData>[];
   }
 }

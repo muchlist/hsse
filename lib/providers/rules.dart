@@ -3,14 +3,15 @@ import 'dart:collection';
 import 'package:flutter/cupertino.dart';
 import 'package:hsse/api/json_models/requests/rules_edit_req.dart';
 import 'package:hsse/api/json_models/requests/rules_req.dart';
+import 'package:hsse/api/json_models/responses/message_resp.dart';
 import 'package:hsse/api/json_models/responses/rules_list_resp.dart';
 import 'package:hsse/api/json_models/responses/rules_resp.dart';
 import 'package:hsse/api/services/rules_service.dart';
 import 'package:hsse/utils/enum_state.dart';
 
 class RulesProvider extends ChangeNotifier {
-  final RulesService _rulesService;
   RulesProvider(this._rulesService);
+  final RulesService _rulesService;
 
   // =======================================================
   // List Rules
@@ -24,9 +25,9 @@ class RulesProvider extends ChangeNotifier {
   }
 
   // rules list cache
-  List<RulesMinData> _rulesList = [];
+  List<RulesMinData> _rulesList = <RulesMinData>[];
   List<RulesMinData> get rulesList {
-    return UnmodifiableListView(_rulesList);
+    return UnmodifiableListView<RulesMinData>(_rulesList);
   }
 
   // * Mendapatkan rules
@@ -35,9 +36,9 @@ class RulesProvider extends ChangeNotifier {
       setState(ViewState.busy);
     }
 
-    var error = "";
+    String error = "";
     try {
-      final response = await _rulesService.findRules();
+      final RulesListResponse response = await _rulesService.findRules();
       if (response.error != null) {
         error = response.error!.message;
       } else {
@@ -50,7 +51,7 @@ class RulesProvider extends ChangeNotifier {
     setState(ViewState.idle);
 
     if (error.isNotEmpty) {
-      return Future.error(error);
+      return Future<void>.error(error);
     }
   }
 
@@ -65,12 +66,7 @@ class RulesProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-  String _rulesIDSaved = "";
-  void setRulesID(String rulesID) {
-    _rulesIDSaved = rulesID;
-  }
-
-  String getRulesId() => _rulesIDSaved;
+  String rulesID = "";
 
   // rules detail cache
   RulesData _rulesDetail = RulesData("", 0, "", "", "", 0, 0, "");
@@ -87,9 +83,10 @@ class RulesProvider extends ChangeNotifier {
   Future<RulesData> getDetail() async {
     setDetailState(ViewState.busy);
 
-    var error = "";
+    String error = "";
     try {
-      final response = await _rulesService.getRules(_rulesIDSaved);
+      final RulesDetailResponse response =
+          await _rulesService.getRules(rulesID);
       if (response.error != null) {
         error = response.error!.message;
       } else {
@@ -101,7 +98,7 @@ class RulesProvider extends ChangeNotifier {
 
     setDetailState(ViewState.idle);
     if (error.isNotEmpty) {
-      return Future.error(error);
+      return Future<RulesData>.error(error);
     }
 
     return _rulesDetail;
@@ -111,10 +108,10 @@ class RulesProvider extends ChangeNotifier {
   // memanggil findRules sehingga tidak perlu notifyListener
   Future<bool> addRules(RulesRequest payload) async {
     setState(ViewState.busy);
-    var error = "";
+    String error = "";
 
     try {
-      final response = await _rulesService.createRules(payload);
+      final MessageResponse response = await _rulesService.createRules(payload);
       if (response.error != null) {
         error = response.error!.message;
       }
@@ -124,7 +121,7 @@ class RulesProvider extends ChangeNotifier {
 
     setState(ViewState.idle);
     if (error.isNotEmpty) {
-      return Future.error(error);
+      return Future<bool>.error(error);
     }
     await findRules(loading: false);
     return true;
@@ -135,10 +132,11 @@ class RulesProvider extends ChangeNotifier {
   // return future RulesDetail jika edit rules berhasil
   Future<bool> editRules(RulesEditRequest payload) async {
     setState(ViewState.busy);
-    var error = "";
+    String error = "";
 
     try {
-      final response = await _rulesService.editRules(_rulesIDSaved, payload);
+      final RulesDetailResponse response =
+          await _rulesService.editRules(rulesID, payload);
       if (response.error != null) {
         error = response.error!.message;
       } else {
@@ -150,7 +148,7 @@ class RulesProvider extends ChangeNotifier {
 
     setState(ViewState.idle);
     if (error.isNotEmpty) {
-      return Future.error(error);
+      return Future<bool>.error(error);
     }
 
     await findRules(loading: false);
@@ -159,10 +157,10 @@ class RulesProvider extends ChangeNotifier {
 
   // remove rules
   Future<bool> removeRules() async {
-    var error = "";
+    String error = "";
 
     try {
-      final response = await _rulesService.deleteRules(_rulesIDSaved);
+      final MessageResponse response = await _rulesService.deleteRules(rulesID);
       if (response.error != null) {
         error = response.error!.message;
       }
@@ -172,7 +170,7 @@ class RulesProvider extends ChangeNotifier {
 
     notifyListeners();
     if (error.isNotEmpty) {
-      return Future.error(error);
+      return Future<bool>.error(error);
     }
     await findRules(loading: false);
     return true;
@@ -190,6 +188,6 @@ class RulesProvider extends ChangeNotifier {
   // di on dispose
   void onClose() {
     removeDetail();
-    _rulesList = [];
+    _rulesList = <RulesMinData>[];
   }
 }

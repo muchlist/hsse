@@ -23,6 +23,11 @@ class RulesMinData {
   RulesMinData(this.id, this.updatedAt, this.updatedBy, this.updatedById,
       this.branch, this.score, this.blockTime, this.description);
 
+  factory RulesMinData.fromJson(Map<String, dynamic> json) =>
+      _$RulesMinDataFromJson(json);
+
+  Map<String, dynamic> toJson() => _$RulesMinDataToJson(this);
+
   final String id;
   @JsonKey(name: "updated_at")
   final int updatedAt;
@@ -35,9 +40,4 @@ class RulesMinData {
   @JsonKey(name: "block_time")
   final int blockTime;
   final String description;
-
-  factory RulesMinData.fromJson(Map<String, dynamic> json) =>
-      _$RulesMinDataFromJson(json);
-
-  Map<String, dynamic> toJson() => _$RulesMinDataToJson(this);
 }

@@ -1,11 +1,4 @@
 class FilterViol {
-  final String? lambung;
-  final String? nopol;
-  final int? state;
-  final int? limit;
-  final int? start;
-  final int? end;
-
   FilterViol({
     this.lambung,
     this.nopol,
@@ -14,4 +7,10 @@ class FilterViol {
     this.start,
     this.end,
   });
+  final String? lambung;
+  final String? nopol;
+  final int? state;
+  final int? limit;
+  final int? start;
+  final int? end;
 }

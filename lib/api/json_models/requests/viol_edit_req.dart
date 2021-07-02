@@ -13,6 +13,11 @@ class ViolEditRequest {
     required this.location,
   });
 
+  factory ViolEditRequest.fromJson(Map<String, dynamic> json) =>
+      _$ViolEditRequestFromJson(json);
+
+  Map<String, dynamic> toJson() => _$ViolEditRequestToJson(this);
+
   @JsonKey(name: "filter_timestamp")
   final int filterTimestamp;
   @JsonKey(name: "no_identity")
@@ -24,9 +29,4 @@ class ViolEditRequest {
   @JsonKey(name: "time_violation")
   final int timeViolation;
   final String location;
-
-  factory ViolEditRequest.fromJson(Map<String, dynamic> json) =>
-      _$ViolEditRequestFromJson(json);
-
-  Map<String, dynamic> toJson() => _$ViolEditRequestToJson(this);
 }

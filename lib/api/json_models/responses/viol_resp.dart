@@ -6,15 +6,14 @@ part 'viol_resp.g.dart';
 
 @JsonSerializable(explicitToJson: true)
 class ViolDetailResponse {
-  final ErrorResp? error;
-  final ViolData? data;
-
   ViolDetailResponse(this.error, this.data);
 
   factory ViolDetailResponse.fromJson(Map<String, dynamic> json) =>
       _$ViolDetailResponseFromJson(json);
 
   Map<String, dynamic> toJson() => _$ViolDetailResponseToJson(this);
+  final ErrorResp? error;
+  final ViolData? data;
 }
 
 @JsonSerializable(explicitToJson: true)
@@ -42,6 +41,11 @@ class ViolData {
       this.timeViolation,
       this.location,
       this.images);
+
+  factory ViolData.fromJson(Map<String, dynamic> json) =>
+      _$ViolDataFromJson(json);
+
+  Map<String, dynamic> toJson() => _$ViolDataToJson(this);
 
   final String id;
   @JsonKey(name: "created_at")
@@ -79,11 +83,6 @@ class ViolData {
   @JsonKey(name: "time_violation")
   final int timeViolation;
   final String location;
-  @JsonKey(defaultValue: [])
+  @JsonKey(defaultValue: <String>[])
   final List<String> images;
-
-  factory ViolData.fromJson(Map<String, dynamic> json) =>
-      _$ViolDataFromJson(json);
-
-  Map<String, dynamic> toJson() => _$ViolDataToJson(this);
 }

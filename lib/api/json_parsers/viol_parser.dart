@@ -12,10 +12,13 @@ class ViolParser extends JsonParser<ViolDetailResponse>
   @override
   Future<ViolDetailResponse> parseFromJson(String json) async {
     try {
-      final decoded = decodeJsonObject(json);
+      final Map<String, dynamic> decoded = decodeJsonObject(json);
       return ViolDetailResponse.fromJson(decoded);
     } catch (e) {
-      return ViolDetailResponse(ErrorResp(0, e.toString(), "", []), null);
+      return ViolDetailResponse(
+        ErrorResp(0, e.toString(), "", <String>[]),
+        null,
+      );
     }
   }
 }
@@ -27,10 +30,13 @@ class ViolListParser extends JsonParser<ViolListResponse>
   @override
   Future<ViolListResponse> parseFromJson(String json) async {
     try {
-      final decoded = decodeJsonObject(json);
+      final Map<String, dynamic> decoded = decodeJsonObject(json);
       return ViolListResponse.fromJson(decoded);
     } catch (e) {
-      return ViolListResponse(ErrorResp(0, e.toString(), "", []), []);
+      return ViolListResponse(
+        ErrorResp(0, e.toString(), "", <String>[]),
+        <ViolMinData>[],
+      );
     }
   }
 }

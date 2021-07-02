@@ -14,6 +14,11 @@ class TruckEditRequest {
     required this.email,
   });
 
+  factory TruckEditRequest.fromJson(Map<String, dynamic> json) =>
+      _$TruckEditRequestFromJson(json);
+
+  Map<String, dynamic> toJson() => _$TruckEditRequestToJson(this);
+
   @JsonKey(name: "filter_timestamp")
   final int filterTimestamp;
   @JsonKey(name: "no_identity")
@@ -24,9 +29,4 @@ class TruckEditRequest {
   final String owner;
   final String hp;
   final String email;
-
-  factory TruckEditRequest.fromJson(Map<String, dynamic> json) =>
-      _$TruckEditRequestFromJson(json);
-
-  Map<String, dynamic> toJson() => _$TruckEditRequestToJson(this);
 }

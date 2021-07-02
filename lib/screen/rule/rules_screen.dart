@@ -63,13 +63,14 @@ class _RulesBodyState extends State<RulesBody> {
           key: refreshKeyRulesScreen,
           onRefresh: _loadRules,
           child: ListView.builder(
-            itemBuilder: (context, index) {
-              final dayBlock = data.rulesList[index].blockTime.toDurationDay();
+            itemBuilder: (BuildContext context, int index) {
+              final String dayBlock =
+                  data.rulesList[index].blockTime.toDurationDay();
               return GestureDetector(
                 onTap: () {
                   data
                     ..removeDetail()
-                    ..setRulesID(data.rulesList[index].id);
+                    ..rulesID = data.rulesList[index].id;
                   Navigator.pushNamed(context, RouteGenerator.editRules);
                 },
                 child: Card(

@@ -6,15 +6,15 @@ part 'truck_resp.g.dart';
 
 @JsonSerializable(explicitToJson: true)
 class TruckDetailResponse {
-  final ErrorResp? error;
-  final TruckData? data;
-
   TruckDetailResponse(this.error, this.data);
 
   factory TruckDetailResponse.fromJson(Map<String, dynamic> json) =>
       _$TruckDetailResponseFromJson(json);
 
   Map<String, dynamic> toJson() => _$TruckDetailResponseToJson(this);
+
+  final ErrorResp? error;
+  final TruckData? data;
 }
 
 @JsonSerializable(explicitToJson: true)
@@ -40,6 +40,11 @@ class TruckData {
       this.blocked,
       this.blockStart,
       this.blockEnd);
+
+  factory TruckData.fromJson(Map<String, dynamic> json) =>
+      _$TruckDataFromJson(json);
+
+  Map<String, dynamic> toJson() => _$TruckDataToJson(this);
 
   final String id;
   @JsonKey(name: "created_at")
@@ -72,9 +77,4 @@ class TruckData {
   final int blockStart;
   @JsonKey(name: "block_end")
   final int blockEnd;
-
-  factory TruckData.fromJson(Map<String, dynamic> json) =>
-      _$TruckDataFromJson(json);
-
-  Map<String, dynamic> toJson() => _$TruckDataToJson(this);
 }

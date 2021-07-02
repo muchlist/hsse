@@ -12,26 +12,26 @@ class RulesService {
 
   Future<MessageResponse> createRules(RulesRequest payload) {
     return RequestREST(endpoint: "/rules", data: payload.toJson())
-        .executePost<MessageResponse>(MessageParser());
+        .executePost<MessageResponse>(const MessageParser());
   }
 
   Future<RulesDetailResponse> editRules(String id, RulesEditRequest payload) {
     return RequestREST(endpoint: "/rules/$id", data: payload.toJson())
-        .executePut<RulesDetailResponse>(RulesParser());
+        .executePut<RulesDetailResponse>(const RulesParser());
   }
 
   Future<RulesDetailResponse> getRules(String id) {
     return RequestREST(endpoint: "/rules/$id")
-        .executeGet<RulesDetailResponse>(RulesParser());
+        .executeGet<RulesDetailResponse>(const RulesParser());
   }
 
   Future<MessageResponse> deleteRules(String id) {
     return RequestREST(endpoint: "/rules/$id")
-        .executeDelete<MessageResponse>(MessageParser());
+        .executeDelete<MessageResponse>(const MessageParser());
   }
 
   Future<RulesListResponse> findRules() {
     return RequestREST(endpoint: "/rules")
-        .executeGet<RulesListResponse>(RulesListParser());
+        .executeGet<RulesListResponse>(const RulesListParser());
   }
 }

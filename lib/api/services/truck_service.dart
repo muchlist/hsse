@@ -13,26 +13,26 @@ class TruckService {
 
   Future<MessageResponse> createTruck(TruckRequest payload) {
     return RequestREST(endpoint: "/truck", data: payload.toJson())
-        .executePost<MessageResponse>(MessageParser());
+        .executePost<MessageResponse>(const MessageParser());
   }
 
   Future<TruckDetailResponse> editTruck(String id, TruckEditRequest payload) {
     return RequestREST(endpoint: "/truck/$id", data: payload.toJson())
-        .executePut<TruckDetailResponse>(TruckParser());
+        .executePut<TruckDetailResponse>(const TruckParser());
   }
 
   Future<TruckDetailResponse> getTruck(String id) {
     return RequestREST(endpoint: "/truck/$id")
-        .executeGet<TruckDetailResponse>(TruckParser());
+        .executeGet<TruckDetailResponse>(const TruckParser());
   }
 
   Future<MessageResponse> deleteTruck(String id) {
     return RequestREST(endpoint: "/truck/$id")
-        .executeDelete<MessageResponse>(MessageParser());
+        .executeDelete<MessageResponse>(const MessageParser());
   }
 
   Future<TruckListResponse> findTruck(FilterTruck f) {
-    var query = "";
+    String query = "";
 
     if (f.branch != null) {
       query = query + "branch=${f.branch}&";
@@ -51,6 +51,6 @@ class TruckService {
     }
 
     return RequestREST(endpoint: "/truck?$query")
-        .executeGet<TruckListResponse>(TruckListParser());
+        .executeGet<TruckListResponse>(const TruckListParser());
   }
 }

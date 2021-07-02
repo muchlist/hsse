@@ -13,6 +13,11 @@ class ViolRequest {
     required this.location,
   });
 
+  factory ViolRequest.fromJson(Map<String, dynamic> json) =>
+      _$ViolRequestFromJson(json);
+
+  Map<String, dynamic> toJson() => _$ViolRequestToJson(this);
+
   @JsonKey(name: "no_identity")
   final String noIdentity;
   final int state;
@@ -23,9 +28,4 @@ class ViolRequest {
   @JsonKey(name: "time_violation")
   final int timeViolation;
   final String location;
-
-  factory ViolRequest.fromJson(Map<String, dynamic> json) =>
-      _$ViolRequestFromJson(json);
-
-  Map<String, dynamic> toJson() => _$ViolRequestToJson(this);
 }
