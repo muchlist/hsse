@@ -49,7 +49,7 @@ class _HomeHsseScreenState extends State<HomeHsseScreen> {
       appBar: AppBar(
         elevation: 0,
         title: buildHomeTitle(context),
-        actions: [
+        actions: <Widget>[
           IconButton(
             icon: const Icon(
               CupertinoIcons.person_crop_circle,
@@ -198,20 +198,24 @@ class _HomeHsseBodyState extends State<HomeHsseBody> {
             height: 120,
             child: ListView(
               scrollDirection: Axis.horizontal,
-              children: [
-                CircleMenu(
-                  color: TColor.primary,
-                  iconData: Icons.commute_sharp,
-                  tapTap: () {},
-                  text: 'Truck',
+              children: <Widget>[
+                GestureDetector(
+                  onTap: () =>
+                      Navigator.pushNamed(context, RouteGenerator.trucks),
+                  child: CircleMenu(
+                    color: TColor.primary,
+                    iconData: Icons.commute_sharp,
+                    tapTap: () {},
+                    text: 'Truck',
+                  ),
                 ),
                 GestureDetector(
                   onTap: () =>
                       Navigator.pushNamed(context, RouteGenerator.rules),
                   child: CircleMenu(
+                    tapTap: () {},
                     color: TColor.primary,
                     iconData: Icons.book,
-                    tapTap: () {},
                     text: 'Rules',
                   ),
                 ),

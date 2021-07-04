@@ -34,6 +34,7 @@ class TruckData {
       this.owner,
       this.hp,
       this.email,
+      // ignore: avoid_positional_boolean_parameters
       this.deleted,
       this.score,
       this.resetScoreDate,

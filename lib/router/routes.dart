@@ -4,6 +4,8 @@ import 'package:hsse/screen/login/login_screen.dart';
 import 'package:hsse/screen/rule/add_rule_screen.dart';
 import 'package:hsse/screen/rule/edit_rule_screen.dart';
 import 'package:hsse/screen/rule/rules_screen.dart';
+import 'package:hsse/screen/truck/truck_detail_screen.dart';
+import 'package:hsse/screen/truck/trucks_screen.dart';
 import 'package:hsse/screen/violation/add_viol_screen.dart';
 import 'package:hsse/screen/violation/edit_viol_screen.dart';
 import 'package:hsse/screen/violation/history_screen.dart';
@@ -21,6 +23,8 @@ class RouteGenerator {
   static const String rules = '/rules';
   static const String addRules = '/add-rules';
   static const String editRules = '/edit-rules';
+  static const String trucks = '/truck';
+  static const String truckDetail = '/truck-detail';
 
   static Route<dynamic> generateRoute(RouteSettings settings) {
     switch (settings.name) {
@@ -50,6 +54,12 @@ class RouteGenerator {
       case editRules:
         return MaterialPageRoute<EditRulesScreen>(
             builder: (_) => EditRulesScreen());
+      case trucks:
+        return MaterialPageRoute<TruckScreen>(
+            builder: (_) => const TruckScreen());
+      case truckDetail:
+        return MaterialPageRoute<TruckDetailScreen>(
+            builder: (_) => const TruckDetailScreen());
       default:
         return MaterialPageRoute<LoginScreen>(builder: (_) => LoginScreen());
     }

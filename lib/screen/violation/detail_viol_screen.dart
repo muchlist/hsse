@@ -11,6 +11,7 @@ import 'package:hsse/screen/components/custom_button.dart';
 import 'package:hsse/screen/components/disable_glow.dart';
 import 'package:hsse/screen/components/flushbar.dart';
 import 'package:hsse/screen/components/ui_helper.dart';
+import 'package:hsse/singleton/shared_pref.dart';
 import 'package:hsse/utils/enum_state.dart';
 import 'package:hsse/utils/utils.dart';
 import 'package:image_picker/image_picker.dart';
@@ -217,19 +218,33 @@ class _ViolDetailScreenBodyState extends State<ViolDetailScreenBody> {
               ),
             ),
             Positioned(
-              bottom: 0,
-              left: 0,
-              right: 0,
-              child: (detail.state == 2)
-                  ? buildBottomApproved(detail)
-                  : (detail.state == 1)
-                      ? buildBottomScreen()
-                      : buildBottomDraft(),
-            )
+                bottom: 0,
+                left: 0,
+                right: 0,
+                child: authBasedView(
+                    detail: detail,
+                    isHsse: SharedPrefs().getRoles().contains("HSSE")))
           ],
         );
       },
     );
+  }
+
+  Widget authBasedView({required ViolData detail, required bool isHsse}) {
+    if (detail.state == 2) {
+      return buildBottomApproved(detail);
+    } else if (detail.state == 1) {
+      // need approved
+      if (isHsse) {
+        return buildBottomNeedApproveScreen();
+      } else {
+        // non hsse user
+        return buildBottomSendToHsse();
+      }
+    } else {
+      // draft
+      return buildBottomDraft();
+    }
   }
 
   Container buildUpperScreen(ViolData data) {
@@ -319,7 +334,7 @@ class _ViolDetailScreenBodyState extends State<ViolDetailScreenBody> {
     );
   }
 
-  Widget buildBottomScreen() {
+  Widget buildBottomNeedApproveScreen() {
     return Container(
       color: Colors.white,
       child: Padding(
@@ -346,7 +361,7 @@ class _ViolDetailScreenBodyState extends State<ViolDetailScreenBody> {
 
   Widget buildBottomApproved(ViolData data) {
     return Container(
-      // height: 50,
+      // height: 60,
       color: TColor.primary.withOpacity(0.9),
       child: Padding(
         padding: const EdgeInsets.all(8.0),
@@ -354,32 +369,18 @@ class _ViolDetailScreenBodyState extends State<ViolDetailScreenBody> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: <Widget>[
             const Icon(
-              Icons.double_arrow_sharp,
+              Icons.check_box,
               color: Colors.white,
             ),
             horizontalSpaceRegular,
-            Flexible(
+            Expanded(
               child: Text(
-                "DISETUJUI OLEH ${data.approvedBy}",
-                style: const TextStyle(color: Colors.white),
+                "DISETUJUI OLEH ${data.approvedBy}\nEmail dikirim ke pemilik truck",
+                style: const TextStyle(color: Colors.white, fontSize: 12),
                 overflow: TextOverflow.ellipsis,
-                maxLines: 2,
+                maxLines: 3,
               ),
             ),
-            horizontalSpaceTiny,
-            const Icon(
-              Icons.double_arrow_sharp,
-              color: Colors.white,
-            ),
-            horizontalSpaceRegular,
-            const Flexible(
-              child: Text(
-                "EMAIL DIKIRIM",
-                style: TextStyle(color: Colors.white),
-                overflow: TextOverflow.ellipsis,
-                maxLines: 2,
-              ),
-            )
           ],
         ),
       ),
@@ -413,6 +414,34 @@ class _ViolDetailScreenBodyState extends State<ViolDetailScreenBody> {
               text: "Kirim ",
               tapTap: _ready,
               color: Colors.blue.shade400,
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget buildBottomSendToHsse() {
+    return Container(
+      // height: 60,
+      color: Colors.blue.shade400.withOpacity(0.9),
+      child: Padding(
+        padding: const EdgeInsets.all(8.0),
+        child: Row(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: const <Widget>[
+            Icon(
+              Icons.send_and_archive,
+              color: Colors.white,
+            ),
+            horizontalSpaceRegular,
+            Expanded(
+              child: Text(
+                "TERKIRIM\nMenunggu persetujuan HSSE",
+                style: TextStyle(color: Colors.white, fontSize: 12),
+                overflow: TextOverflow.ellipsis,
+                maxLines: 3,
+              ),
             ),
           ],
         ),

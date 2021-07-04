@@ -37,3 +37,7 @@ linter:
     lines_longer_than_80_chars: false
     prefer_interpolation_to_compose_strings: false
     sort_pub_dependencies: false
+
+analyzer:
+  exclude: 
+    - '**/*g.dart'
