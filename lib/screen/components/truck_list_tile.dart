@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:hsse/api/json_models/responses/truck_list_resp.dart';
-import 'package:hsse/config/theme_color.dart';
 
 class TruckListTile extends StatelessWidget {
   const TruckListTile({Key? key, required this.data}) : super(key: key);
