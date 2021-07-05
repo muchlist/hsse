@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:hsse/api/json_models/responses/truck_resp.dart';
 import 'package:hsse/providers/truck.dart';
+import 'package:hsse/router/routes.dart';
 import 'package:hsse/screen/components/custom_button.dart';
 import 'package:hsse/screen/components/disable_glow.dart';
 import 'package:hsse/screen/components/flushbar.dart';
@@ -99,8 +100,8 @@ class _TruckDetailScreenBodyState extends State<TruckDetailScreenBody> {
                                   text: "Edit ",
                                   color: Colors.deepOrange.shade300,
                                   tapTap: () {
-                                    // Navigator.pushNamed(
-                                    //     context, RouteGenerator.editTruck);
+                                    Navigator.pushNamed(
+                                        context, RouteGenerator.editTruck);
                                   }),
                             ),
                           const SizedBox(height: 150)

@@ -1,10 +1,9 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:hsse/config/config.dart';
 import 'package:hsse/providers/rules.dart';
 import 'package:hsse/router/routes.dart';
 import 'package:hsse/screen/components/flushbar.dart';
-import 'package:hsse/utils/utils.dart';
+import 'package:hsse/screen/components/rules_list_tile.dart';
 import 'package:provider/provider.dart';
 
 GlobalKey<RefreshIndicatorState> refreshKeyRulesScreen =
@@ -65,8 +64,6 @@ class _RulesBodyState extends State<RulesBody> {
           onRefresh: _loadRules,
           child: ListView.builder(
             itemBuilder: (BuildContext context, int index) {
-              final String dayBlock =
-                  data.rulesList[index].blockTime.toDurationDay();
               return GestureDetector(
                 onTap: () {
                   data
@@ -74,27 +71,7 @@ class _RulesBodyState extends State<RulesBody> {
                     ..rulesID = data.rulesList[index].id;
                   Navigator.pushNamed(context, RouteGenerator.editRules);
                 },
-                child: Card(
-                  child: Padding(
-                    padding: const EdgeInsets.all(4.0),
-                    child: ListTile(
-                      leading: CircleAvatar(
-                        backgroundColor: TColor.secondaryBackground,
-                        child: Text(data.rulesList[index].score.toString()),
-                      ),
-                      title:
-                          Text("Pelanggaran ke ${data.rulesList[index].score}"),
-                      subtitle: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: <Widget>[
-                          Text(data.rulesList[index].description),
-                          if (dayBlock != "0 hari")
-                            Text("Blokir selama $dayBlock"),
-                        ],
-                      ),
-                    ),
-                  ),
-                ),
+                child: RulesListTile(data: data.rulesList[index]),
               );
             },
             itemCount: data.rulesList.length,

@@ -1,5 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:hsse/api/json_models/requests/truck_edit_req.dart';
+import 'package:hsse/api/json_models/responses/truck_resp.dart';
 import 'package:hsse/screen/components/custom_button.dart';
 import 'package:hsse/screen/components/flushbar.dart';
 import 'package:hsse/screen/components/text_form.dart';
@@ -7,28 +9,28 @@ import 'package:hsse/screen/components/ui_helper.dart';
 import 'package:hsse/utils/enum_state.dart';
 import 'package:hsse/utils/validator_regex.dart';
 import 'package:provider/provider.dart';
-import 'package:hsse/api/json_models/requests/truck_req.dart';
 import 'package:hsse/providers/truck.dart';
 
-class AddTruckScreen extends StatelessWidget {
+class EditTruckScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         elevation: 0,
-        title: const Text("Tambah truck"),
+        title: const Text("Edit truck"),
       ),
-      body: AddTruckBody(),
+      body: EditTruckBody(),
     );
   }
 }
 
-class AddTruckBody extends StatefulWidget {
+class EditTruckBody extends StatefulWidget {
   @override
-  _AddTruckBodyState createState() => _AddTruckBodyState();
+  _EditTruckBodyState createState() => _EditTruckBodyState();
 }
 
-class _AddTruckBodyState extends State<AddTruckBody> {
+class _EditTruckBodyState extends State<EditTruckBody> {
+  late TruckProvider truckProvider;
   final GlobalKey<FormState> _key = GlobalKey<FormState>();
 
   final TextEditingController noIdentityController = TextEditingController();
@@ -38,16 +40,17 @@ class _AddTruckBodyState extends State<AddTruckBody> {
   final TextEditingController hpController = TextEditingController();
   final TextEditingController emailController = TextEditingController();
 
-  void _addTruck() {
+  void _editTruck(int timeStamp) {
     if (_key.currentState?.validate() ?? false) {
       // Payload
-      final TruckRequest payload = TruckRequest(
+      final TruckEditRequest payload = TruckEditRequest(
         noIdentity: noIdentityController.text,
         noPol: noPolController.text,
         mark: markController.text,
         owner: ownerController.text,
         hp: hpController.text,
         email: emailController.text,
+        filterTimestamp: timeStamp,
       );
 
       // Call Provider
@@ -55,12 +58,12 @@ class _AddTruckBodyState extends State<AddTruckBody> {
           Duration.zero,
           () => context
                   .read<TruckProvider>()
-                  .addTruck(payload)
+                  .editTruck(payload)
                   .then((bool value) {
                 if (value) {
                   Navigator.of(context).pop();
                   showToastSuccess(
-                      context: context, message: "Berhasil menambahkan truck");
+                      context: context, message: "Berhasil mengedit truck");
                 }
               }).onError((Object? error, _) {
                 if (error != null) {
@@ -68,6 +71,23 @@ class _AddTruckBodyState extends State<AddTruckBody> {
                 }
               }));
     }
+  }
+
+  @override
+  void initState() {
+    truckProvider = context.read<TruckProvider>();
+    final TruckData truckData = truckProvider.truckDetail;
+
+    setState(() {
+      noIdentityController.text = truckData.noIdentity;
+      noPolController.text = truckData.noPol;
+      markController.text = truckData.mark;
+      ownerController.text = truckData.owner;
+      hpController.text = truckData.hp;
+      emailController.text = truckData.email;
+    });
+
+    super.initState();
   }
 
   @override
@@ -192,9 +212,10 @@ class _AddTruckBodyState extends State<AddTruckBody> {
                       ? const Center(child: CircularProgressIndicator())
                       : Center(
                           child: HomeLikeButton(
-                              iconData: CupertinoIcons.add,
-                              text: "Simpan Truck",
-                              tapTap: _addTruck),
+                              iconData: Icons.edit,
+                              text: "Edit Truck",
+                              tapTap: () =>
+                                  _editTruck(data.truckDetail.updatedAt)),
                         );
                 }),
 
