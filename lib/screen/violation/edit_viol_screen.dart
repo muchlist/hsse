@@ -105,6 +105,46 @@ class _EditViolBodyState extends State<EditViolBody> {
     }
   }
 
+  Future<bool?> _getConfirm(BuildContext context) {
+    return showDialog<bool?>(
+        context: context,
+        barrierDismissible: false,
+        builder: (BuildContext context) {
+          return AlertDialog(
+            title: const Text("Konfirmasi hapus"),
+            content: const Text("Apakah yakin ingin menghapus laporan ini!"),
+            actions: <Widget>[
+              ElevatedButton(
+                  style: ElevatedButton.styleFrom(
+                      primary: Theme.of(context).accentColor),
+                  onPressed: () => Navigator.of(context).pop(false),
+                  child: const Text("Tidak")),
+              TextButton(
+                  onPressed: () => Navigator.of(context).pop(true),
+                  child: const Text("Ya"))
+            ],
+          );
+        });
+  }
+
+  Future<void> _deleteViolation() {
+    return Future<void>.delayed(
+      Duration.zero,
+      () => context.read<ViolProvider>().removeViol().then((bool value) {
+        if (value) {
+          int count = 0;
+          Navigator.of(context).popUntil((_) => count++ >= 2);
+          showToastWarning(
+              context: context, message: "laporan berhasil dihapus");
+        }
+      }).onError((Object? error, _) {
+        if (error != null) {
+          showToastError(context: context, message: error.toString());
+        }
+      }),
+    );
+  }
+
   @override
   void initState() {
     violProvider = context.read<ViolProvider>();
@@ -299,12 +339,36 @@ class _EditViolBodyState extends State<EditViolBody> {
                 Consumer<ViolProvider>(builder: (_, ViolProvider data, __) {
                   return (data.state == ViewState.busy)
                       ? const Center(child: CircularProgressIndicator())
-                      : Center(
-                          child: HomeLikeButton(
-                              iconData: Icons.edit,
-                              text: "Edit Pelanggaran",
-                              tapTap: () =>
-                                  _editViol(data.violDetail.updatedAt)),
+                      : SizedBox(
+                          height: 50,
+                          width: double.infinity,
+                          child: Stack(children: <Widget>[
+                            Positioned(
+                              left: 0,
+                              right: 0,
+                              bottom: 0,
+                              child: Center(
+                                child: HomeLikeButton(
+                                    iconData: Icons.edit,
+                                    text: "Edit Pelanggaran",
+                                    tapTap: () =>
+                                        _editViol(data.violDetail.updatedAt)),
+                              ),
+                            ),
+                            Positioned(
+                                left: 15,
+                                bottom: 0,
+                                child: IconButton(
+                                    onPressed: () async {
+                                      final bool? confirmDelete =
+                                          await _getConfirm(context);
+                                      if (confirmDelete != null &&
+                                          confirmDelete) {
+                                        _deleteViolation();
+                                      }
+                                    },
+                                    icon: const Icon(CupertinoIcons.delete)))
+                          ]),
                         );
                 }),
 

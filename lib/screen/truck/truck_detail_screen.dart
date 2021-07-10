@@ -119,6 +119,8 @@ class _TruckDetailScreenBodyState extends State<TruckDetailScreenBody> {
   }
 
   Container buildUpperScreen(TruckData data) {
+    final bool isHsse = SharedPrefs().getRoles().contains("HSSE");
+
     return Container(
       width: double.infinity,
       decoration: BoxDecoration(
@@ -150,13 +152,13 @@ class _TruckDetailScreenBodyState extends State<TruckDetailScreenBody> {
               "🔹 Email",
               style: TextStyle(fontWeight: FontWeight.bold),
             ),
-            descText(data.email),
+            if (isHsse) descText(data.email) else descText("******"),
             verticalSpaceSmall,
             const Text(
               "🔹 HP",
               style: TextStyle(fontWeight: FontWeight.bold),
             ),
-            descText(data.hp),
+            if (isHsse) descText(data.hp) else descText("******"),
             verticalSpaceSmall,
           ],
         ),

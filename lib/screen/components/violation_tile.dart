@@ -23,7 +23,8 @@ class ViolationTile extends StatelessWidget {
           borderRadius: BorderRadius.circular(5),
           color: Colors.white,
           border: _createdByCurrentAccountAndHaveNotBeeApproved
-              ? Border.all(color: Colors.deepOrange.shade400, width: 2)
+              ? Border.all(
+                  color: Colors.blue.shade400.withOpacity(0.9), width: 2)
               : null,
         ),
         child: Padding(
