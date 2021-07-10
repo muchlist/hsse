@@ -42,12 +42,12 @@ class TruckScreen extends StatelessWidget {
           horizontalSpaceSmall
         ],
       ),
-      floatingActionButton: FloatingActionButton.extended(
-          icon: const Icon(Icons.add),
-          onPressed: () {
-            Navigator.pushNamed(context, RouteGenerator.addTruck);
-          },
-          label: const Text("Tambah")),
+      // floatingActionButton: FloatingActionButton.extended(
+      //     icon: const Icon(Icons.add),
+      //     onPressed: () {
+      //       Navigator.pushNamed(context, RouteGenerator.addTruck);
+      //     },
+      //     label: const Text("Tambah")),
       body: const TruckBody(),
     );
   }

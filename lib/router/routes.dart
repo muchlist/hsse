@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:hsse/screen/home_hsse/home_screen.dart';
+import 'package:hsse/screen/home_sec/home_screen_sec.dart';
 import 'package:hsse/screen/login/login_screen.dart';
 import 'package:hsse/screen/rule/add_rule_screen.dart';
 import 'package:hsse/screen/rule/edit_rule_screen.dart';
@@ -17,6 +18,7 @@ class RouteGenerator {
   RouteGenerator._();
 
   static const String homeHsse = '/home';
+  static const String homeSec = '/home-sec';
   static const String login = '/login';
   static const String detail = '/detail';
   static const String addViol = '/add-viol';
@@ -37,6 +39,9 @@ class RouteGenerator {
       case homeHsse:
         return MaterialPageRoute<HomeHsseScreen>(
             builder: (_) => const HomeHsseScreen());
+      case homeSec:
+        return MaterialPageRoute<HomeSecurityScreen>(
+            builder: (_) => const HomeSecurityScreen());
       case history:
         return MaterialPageRoute<HistoryScreen>(
             builder: (_) => const HistoryScreen());

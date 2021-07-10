@@ -39,14 +39,20 @@ class ViolProvider extends ChangeNotifier {
         _violList.where((ViolMinData e) => e.state == 1));
   }
 
+  // viol list with ready state cache
+  List<ViolMinData> get violListDraftnReady {
+    return UnmodifiableListView<ViolMinData>(
+        _violList.where((ViolMinData e) => e.state == 1 || e.state == 0));
+  }
+
   // viol list with approved state cache
   List<ViolMinData> get violListApproved {
     final List<ViolMinData> temp =
         _violList.where((ViolMinData e) => e.state == 2).toList();
-    if (temp.length < 3) {
+    if (temp.length < 4) {
       return UnmodifiableListView<ViolMinData>(temp);
     }
-    return UnmodifiableListView<ViolMinData>(temp.sublist(0, 3));
+    return UnmodifiableListView<ViolMinData>(temp.sublist(0, 4));
   }
 
   // *memasang filter pada pencarian viol

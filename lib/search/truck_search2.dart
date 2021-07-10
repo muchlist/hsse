@@ -67,8 +67,8 @@ class TruckSearchDelegate2 extends SearchDelegate<String?> {
                     itemCount: data.truckSearchList.length,
                     itemBuilder: (BuildContext context, int index) {
                       return GestureDetector(
-                          onTap: () => close(
-                              context, data.truckSearchList[index].noIdentity),
+                          onTap: () =>
+                              close(context, data.truckSearchList[index].id),
                           child:
                               TruckListTile(data: data.truckSearchList[index]));
                     }),
@@ -117,8 +117,8 @@ class TruckSearchDelegate2 extends SearchDelegate<String?> {
                     itemCount: data.truckSearchList.length,
                     itemBuilder: (BuildContext context, int index) {
                       return GestureDetector(
-                          onTap: () => close(
-                              context, data.truckSearchList[index].noIdentity),
+                          onTap: () =>
+                              close(context, data.truckSearchList[index].id),
                           child:
                               TruckListTile(data: data.truckSearchList[index]));
                     }),

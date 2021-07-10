@@ -19,7 +19,11 @@ class _LandingPageState extends State<LandingPage> {
       });
     } else {
       await Future<void>(() {
-        Navigator.pushReplacementNamed(context, RouteGenerator.homeHsse);
+        if (SharedPrefs().getRoles().contains("HSSE")) {
+          Navigator.pushReplacementNamed(context, RouteGenerator.homeHsse);
+        } else {
+          Navigator.pushReplacementNamed(context, RouteGenerator.homeSec);
+        }
       });
     }
   }

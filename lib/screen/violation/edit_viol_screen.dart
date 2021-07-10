@@ -112,10 +112,14 @@ class _EditViolBodyState extends State<EditViolBody> {
 
     setState(() {
       _selectedNoIdentity = detail.noIdentity;
-      _selectedLocation = detail.location;
-      _selectedType = detail.typeViolation;
       _dateSelected = detail.timeViolation.toDate();
       detailController.text = detail.detailViolation;
+      if (typeViolations.contains(detail.typeViolation)) {
+        _selectedType = detail.typeViolation;
+      }
+      if (locationViolations.contains(detail.location)) {
+        _selectedLocation = detail.location;
+      }
     });
     super.initState();
   }

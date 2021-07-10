@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:hsse/api/json_models/responses/viol_list_resp.dart';
 import 'package:hsse/config/url.dart';
 import 'package:hsse/screen/components/cached_image.dart';
+import 'package:hsse/singleton/shared_pref.dart';
 import '../../config/theme_color.dart';
 import '../../utils/utils.dart';
 
@@ -11,11 +12,20 @@ class ViolationTile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final bool _createdByCurrentAccountAndHaveNotBeeApproved =
+        (data.state == 0 || data.state == 1) &&
+            (data.createdBy == SharedPrefs().getName());
+
     return Padding(
       padding: const EdgeInsets.all(4.0),
       child: Container(
         decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(5), color: Colors.white),
+          borderRadius: BorderRadius.circular(5),
+          color: Colors.white,
+          border: _createdByCurrentAccountAndHaveNotBeeApproved
+              ? Border.all(color: Colors.deepOrange.shade400, width: 2)
+              : null,
+        ),
         child: Padding(
           padding: const EdgeInsets.all(8.0),
           child: Column(

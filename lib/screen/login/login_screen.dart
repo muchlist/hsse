@@ -3,6 +3,7 @@ import 'package:hsse/config/config.dart';
 import 'package:hsse/screen/components/custom_button.dart';
 import 'package:hsse/screen/components/flushbar.dart';
 import 'package:hsse/screen/components/ui_helper.dart';
+import 'package:hsse/singleton/shared_pref.dart';
 import 'package:hsse/utils/enum_state.dart';
 import 'package:lottie/lottie.dart';
 import 'package:provider/provider.dart';
@@ -97,9 +98,18 @@ class _LoginFormState extends State<LoginForm> {
       Future<void>.delayed(Duration.zero, () {
         authViewModel.login(username, password).then((bool value) {
           if (value) {
-            Navigator.of(context).pushNamedAndRemoveUntil(
-                RouteGenerator.homeHsse,
-                ModalRoute.withName(RouteGenerator.homeHsse));
+            Future<void>.delayed(const Duration(milliseconds: 500), () {
+              // jika akun HSSE
+              if (SharedPrefs().getRoles().contains("HSSE")) {
+                Navigator.of(context).pushNamedAndRemoveUntil(
+                    RouteGenerator.homeHsse,
+                    ModalRoute.withName(RouteGenerator.homeHsse));
+              } else {
+                Navigator.of(context).pushNamedAndRemoveUntil(
+                    RouteGenerator.homeHsse,
+                    ModalRoute.withName(RouteGenerator.homeSec));
+              }
+            });
           }
         }).onError((Object? error, _) {
           if (error != null) {
