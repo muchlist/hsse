@@ -1,8 +1,10 @@
 import 'dart:io';
 
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:hsse/api/json_models/responses/viol_resp.dart';
 import 'package:hsse/config/config.dart';
+import 'package:hsse/providers/truck.dart';
 import 'package:hsse/providers/viol.dart';
 import 'package:hsse/router/routes.dart';
 import 'package:hsse/screen/components/cached_image.dart';
@@ -257,11 +259,28 @@ class _ViolDetailScreenBodyState extends State<ViolDetailScreenBody> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: <Widget>[
-            const Text(
-              "🚚  Nomor Lambung",
-              style: TextStyle(fontWeight: FontWeight.bold),
+            Row(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: <Widget>[
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: <Widget>[
+                    const Text(
+                      "🚚  Nomor Lambung",
+                      style: TextStyle(fontWeight: FontWeight.bold),
+                    ),
+                    descText("${data.noIdentity} (${data.noPol})"),
+                  ],
+                ),
+                const Spacer(),
+                IconButton(
+                    onPressed: () {
+                      context.read<TruckProvider>().truckID = data.noIdentity;
+                      Navigator.pushNamed(context, RouteGenerator.truckDetail);
+                    },
+                    icon: const Icon(CupertinoIcons.link_circle))
+              ],
             ),
-            descText("${data.noIdentity} (${data.noPol})"),
             verticalSpaceSmall,
             const Text(
               "👤  Pemilik",

@@ -26,6 +26,11 @@ class TruckService {
         .executeGet<TruckDetailResponse>(const TruckParser());
   }
 
+  Future<TruckDetailResponse> getTruckByLambung(String id) {
+    return RequestREST(endpoint: "/truck-lambung/$id")
+        .executeGet<TruckDetailResponse>(const TruckParser());
+  }
+
   Future<MessageResponse> deleteTruck(String id) {
     return RequestREST(endpoint: "/truck/$id")
         .executeDelete<MessageResponse>(const MessageParser());

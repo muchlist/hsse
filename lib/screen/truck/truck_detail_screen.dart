@@ -100,6 +100,7 @@ class _TruckDetailScreenBodyState extends State<TruckDetailScreenBody> {
                                   text: "Edit ",
                                   color: Colors.deepOrange.shade300,
                                   tapTap: () {
+                                    data.truckID = data.truckDetail.id;
                                     Navigator.pushNamed(
                                         context, RouteGenerator.editTruck);
                                   }),

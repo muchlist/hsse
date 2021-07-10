@@ -104,6 +104,7 @@ class TruckProvider extends ChangeNotifier {
     notifyListeners();
   }
 
+  /// truckID jika kurang dari 10 digit artinya nomor lambung
   String truckID = "";
 
   // truck detail cache
@@ -125,8 +126,15 @@ class TruckProvider extends ChangeNotifier {
 
     String error = "";
     try {
-      final TruckDetailResponse response =
-          await _truckService.getTruck(truckID);
+      late TruckDetailResponse response;
+      if (truckID.length < 10) {
+        // cari berdasarkan nomor lambung
+        response = await _truckService.getTruckByLambung(truckID);
+      } else {
+        // cari berdsasarkan ObjectID
+        response = await _truckService.getTruck(truckID);
+      }
+
       if (response.error != null) {
         error = response.error!.message;
       } else {
@@ -165,24 +173,6 @@ class TruckProvider extends ChangeNotifier {
     await findTruck(loading: false);
     return true;
   }
-
-  // // truck option cache
-  // OptLocationType _truckOption = OptLocationType(["None"], ["None"]);
-  // OptLocationType get truckOption {
-  //   return _truckOption;
-  // }
-
-  // // * Mendapatkan check option
-  // Future<void> findOptionTruck() async {
-  //   try {
-  //     final response =
-  //         await _truckService.getOptCreateTruck(App.getBranch() ?? "");
-  //     _truckOption = response;
-  //   } catch (e) {
-  //     return Future.error(e.toString());
-  //   }
-  //   notifyListeners();
-  // }
 
   // return future TruckDetail jika edit truck berhasil
   Future<bool> editTruck(TruckEditRequest payload) async {
