@@ -1,7 +1,9 @@
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'package:hsse/config/theme_color.dart';
+import 'package:hsse/providers/auth.dart';
 import 'package:hsse/providers/viol.dart';
 import 'package:hsse/router/routes.dart';
 import 'package:hsse/screen/components/circle_menu.dart';
@@ -26,6 +28,8 @@ class HomeHsseScreen extends StatefulWidget {
 }
 
 class _HomeHsseScreenState extends State<HomeHsseScreen> {
+  late FirebaseMessaging messaging;
+
   RichText buildHomeTitle(BuildContext context) {
     return RichText(
       text: TextSpan(
@@ -41,6 +45,38 @@ class _HomeHsseScreenState extends State<HomeHsseScreen> {
                     fontWeight: FontWeight.normal))
           ]),
     );
+  }
+
+  @override
+  void initState() {
+    messaging = FirebaseMessaging.instance;
+    messaging.getToken().then((String? value) async {
+      final String? firebaseTokenSaved = SharedPrefs().getFireToken();
+      if (value != firebaseTokenSaved) {
+        if (value != null) {
+          final bool success =
+              await context.read<AuthProvider>().sendFCMToken(value);
+          if (success) {
+            await SharedPrefs().setFireToken(value);
+          }
+        }
+      }
+    });
+
+    FirebaseMessaging.onMessage.listen((RemoteMessage message) {
+      if (message.notification != null) {
+        showToastWarning(
+          context: context,
+          message: message.notification?.body ?? "",
+        );
+      }
+    });
+
+    FirebaseMessaging.onMessageOpenedApp.listen((RemoteMessage message) {
+      // notifikasi di klik
+    });
+
+    super.initState();
   }
 
   @override

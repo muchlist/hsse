@@ -1,6 +1,9 @@
+import 'package:firebase_core/firebase_core.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:hsse/api/services/auth_service.dart';
 import 'package:hsse/api/services/rules_service.dart';
@@ -19,11 +22,55 @@ import 'package:provider/single_child_widget.dart';
 import 'api/services/truck_service.dart';
 import 'api/services/viol_service.dart';
 
+Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
+  await Firebase.initializeApp();
+  // print("Handling a background message: ${message.messageId}");
+}
+
+// Create a [AndroidNotificationChannel] for heads up notifications
+late AndroidNotificationChannel channel;
+
+/// Initialize the [FlutterLocalNotificationsPlugin] package.
+late FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin;
+
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
   // init SharedPrefs
   await SharedPrefs().init();
+
+  // init firebase
+  await Firebase.initializeApp();
+  FirebaseMessaging.onBackgroundMessage(_firebaseMessagingBackgroundHandler);
+
+  if (!kIsWeb) {
+    channel = const AndroidNotificationChannel(
+      'risa2', // id
+      'risa notification', // title
+      'channel untuk menampilkan notif risa', // description
+      importance: Importance.high,
+    );
+
+    flutterLocalNotificationsPlugin = FlutterLocalNotificationsPlugin();
+
+    /// Create an Android Notification Channel.
+    ///
+    /// We use this channel in the `AndroidManifest.xml` file to override the
+    /// default FCM channel to enable heads up notifications.
+    await flutterLocalNotificationsPlugin
+        .resolvePlatformSpecificImplementation<
+            AndroidFlutterLocalNotificationsPlugin>()
+        ?.createNotificationChannel(channel);
+
+    /// Update the iOS foreground notification presentation options to allow
+    /// heads up notifications.
+    await FirebaseMessaging.instance
+        .setForegroundNotificationPresentationOptions(
+      alert: true,
+      badge: true,
+      sound: true,
+    );
+  }
 
   // add font licensi
   LicenseRegistry.addLicense(() async* {
@@ -46,7 +93,6 @@ class MyApp extends StatelessWidget {
   final ViolService _violService = const ViolService();
   final RulesService _rulesService = const RulesService();
   final TruckService _truckService = const TruckService();
-  // final TruckService _truckService = TruckService();
 
   @override
   Widget build(BuildContext context) {

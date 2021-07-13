@@ -1,4 +1,4 @@
-package com.example.hsse
+package dev.muchlis.hsse
 
 import io.flutter.embedding.android.FlutterActivity
 
