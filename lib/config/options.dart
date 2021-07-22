@@ -1,13 +1,19 @@
 final List<String> typeViolations = <String>[
   "APD",
+  "RAMBU-RAMBU",
   "PROSEDUR",
-  "PRILAKU",
   "KRIMINAL",
+  "PRILAKU",
   "LAINNYA",
 ];
 
 final List<String> locationViolations = <String>[
-  "GATE TPKB",
-  "CY",
-  "DERMAGA TPKB",
+  "CY 1",
+  "CY 2",
+  "CY 3",
+  "CY WS",
+  "CY EX TONASE",
+  "DERMAGA",
+  "JALAN UTAMA",
+  "GATE",
 ];

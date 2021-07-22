@@ -5,7 +5,6 @@ import 'package:hsse/screen/components/flushbar.dart';
 import 'package:hsse/screen/components/ui_helper.dart';
 import 'package:hsse/singleton/shared_pref.dart';
 import 'package:hsse/utils/enum_state.dart';
-import 'package:lottie/lottie.dart';
 import 'package:provider/provider.dart';
 
 import '../../providers/auth.dart';
@@ -44,9 +43,9 @@ class Upper extends StatelessWidget {
     return Container(
       height: height,
       width: width,
-      decoration: const BoxDecoration(
-          color: TColor.secondaryBackground,
-          borderRadius: BorderRadius.only(
+      decoration: BoxDecoration(
+          color: Colors.blueGrey.shade100,
+          borderRadius: const BorderRadius.only(
               bottomLeft: Radius.circular(20),
               bottomRight: Radius.circular(20))),
       child: Center(
@@ -55,9 +54,11 @@ class Upper extends StatelessWidget {
         children: <Widget>[
           if (screenIsPortrait(context))
             SizedBox(
-                height: 100,
-                child:
-                    Lottie.asset('assets/lottie/150-android-fingerprint.json')),
+              height: 125,
+              // child: Lottie.asset('assets/lottie/150-android-fingerprint.json'),
+              child: Image.asset("assets/icon/icon.png"),
+            ),
+          verticalSpaceTiny,
           const Text(
             "LOGIN",
             style: TextStyle(color: Colors.black, fontSize: 25),

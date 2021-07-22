@@ -30,6 +30,29 @@ class HomeHsseScreen extends StatefulWidget {
 class _HomeHsseScreenState extends State<HomeHsseScreen> {
   late FirebaseMessaging messaging;
 
+  Future<bool?> _logoutConfirm(BuildContext context) {
+    return showDialog<bool?>(
+        context: context,
+        barrierDismissible: false,
+        builder: (BuildContext context) {
+          return AlertDialog(
+            title: const Text("Konfirmasi logout"),
+            content: const Text(
+                "Apakah anda yakin ingin ingin logout? salah pencet? maaf karena kami meletakkan tombol logout didekat tombol pencarian."),
+            actions: <Widget>[
+              ElevatedButton(
+                  style: ElevatedButton.styleFrom(
+                      primary: Theme.of(context).accentColor),
+                  onPressed: () => Navigator.of(context).pop(false),
+                  child: const Text("Jangan Logout")),
+              TextButton(
+                  onPressed: () => Navigator.of(context).pop(true),
+                  child: const Text("Logout"))
+            ],
+          );
+        });
+  }
+
   RichText buildHomeTitle(BuildContext context) {
     return RichText(
       text: TextSpan(
@@ -87,12 +110,18 @@ class _HomeHsseScreenState extends State<HomeHsseScreen> {
         title: buildHomeTitle(context),
         actions: <Widget>[
           IconButton(
-            icon: const Icon(
-              CupertinoIcons.person_crop_circle,
-              size: 28,
-            ),
-            onPressed: () {},
-          ),
+              icon: const Icon(
+                CupertinoIcons.person_crop_circle,
+                size: 28,
+              ),
+              onPressed: () async {
+                final bool? logout = await _logoutConfirm(context);
+                if (logout != null && logout) {
+                  await SharedPrefs().setToken("");
+                  await Navigator.pushNamedAndRemoveUntil(context,
+                      RouteGenerator.login, (Route<dynamic> route) => false);
+                }
+              }),
           horizontalSpaceSmall
         ],
       ),

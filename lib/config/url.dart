@@ -1,4 +1,4 @@
 class ConstUrl {
-  static const String baseUrl = "http://10.4.3.105:3501/";
-  static const String baseApiUrl = "http://10.4.3.105:3501/api/v1/";
+  static const String baseUrl = "https://hsse.muchlis.dev/";
+  static const String baseApiUrl = "https://hsse.muchlis.dev/api/v1/";
 }

@@ -70,9 +70,7 @@ flutter:
 
   # To add assets to your application, add an assets section, like this:
   assets:
-    - images/example.jpg
-    - images/example2.jpg
-    - images/fake.jpg
+    - assets/icon/icon.png
     - assets/lottie/150-android-fingerprint.json
     - assets/lottie/629-empty-box.json
     - assets/lottie/41993-no-wi-fi.json
